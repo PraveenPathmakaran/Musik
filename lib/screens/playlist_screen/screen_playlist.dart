@@ -172,8 +172,10 @@ class ScreenAddToPlaylistFromHome extends StatelessWidget {
       builder: (context, value, child) {
         return ListView(
           children: [
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                const SizedBox(),
                 TextButton.icon(
                     onPressed: () {
                       openDialog(context);
@@ -183,7 +185,12 @@ class ScreenAddToPlaylistFromHome extends StatelessWidget {
                       color: Colors.white,
                     ),
                     label: functionText(
-                        "Playlist Create", Colors.white, FontWeight.bold, 20))
+                        "Playlist Create", Colors.white, FontWeight.bold, 20)),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Close'))
               ],
             ),
             ListView.builder(

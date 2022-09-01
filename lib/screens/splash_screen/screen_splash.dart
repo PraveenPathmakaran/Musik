@@ -13,7 +13,6 @@ import '../home_screen/screen_home.dart';
 
 final audioPlayer = AssetsAudioPlayer.withId("0");
 List<MusicModel> allAudioListFromDB = [];
-List<Map<dynamic, dynamic>> allSongs = []; //converting method cahnnel audios
 List<MusicModel> allMusicModelSongs = []; //map converted to music model
 List<String> tempFavouriteList = []; //favourite audi songs id list
 List<Audio> audioSongsList = []; //converted audio list audiomodel
@@ -93,17 +92,11 @@ class _ScreenSplashState extends State<ScreenSplash> {
   }
 
   Future getAllAudios() async {
-    final value = await audioChannel.invokeMethod<List<Object?>>("getAudios");
-    //method channel songs convert to flutter map
-    for (int i = 0; i < value!.length; i++) {
-      final value2 = HashMap.from(value[i] as Map<dynamic, dynamic>);
-      allSongs.add(value2);
-    }
-    //converting music model
-    for (int i = 0; i < allSongs.length; i++) {
-      final value = MusicModel.fromJson(allSongs[i]);
-
-      allMusicModelSongs.add(value);
+    final audios = await audioChannel.invokeMethod<List<Object?>>("getAudios");
+    for (int i = 0; i < audios!.length; i++) {
+      final musicModelaudio =
+          MusicModel.fromJson(HashMap.from(audios[i] as Map<dynamic, dynamic>));
+      allMusicModelSongs.add(musicModelaudio);
     }
 
     await addAudiosToDB();
