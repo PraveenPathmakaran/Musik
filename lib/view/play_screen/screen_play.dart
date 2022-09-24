@@ -1,11 +1,10 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:newmusicplayer/controller/favorite_screen/screen_favourites_controller.dart';
 import '../../controller/play_screen/screen_play_controller.dart';
 import '../../core/colors.dart';
 import '../../functions/design_widgets.dart';
-import '../favourite_screen/favourites_functions.dart';
 import '../playlist_screen/screen_playlist.dart';
 import '../splash_screen/screen_splash.dart';
 
@@ -27,8 +26,6 @@ class ScreenPlay extends StatelessWidget {
       body: audioPlayer.builderRealtimePlayingInfos(
           builder: (contex, realtimePlayingInfos) {
         realtimePlayingInfos1 = realtimePlayingInfos;
-
-        // ignore: prefer_const_constructors
         return PlayContainer();
       }),
     );
@@ -39,6 +36,7 @@ class PlayContainer extends StatelessWidget {
   PlayContainer({Key? key}) : super(key: key);
   final ScreenPlayController screenPlayController =
       Get.put(ScreenPlayController());
+  final favouritesController = Get.put(FavouritesController());
 
   @override
   Widget build(BuildContext context) {
@@ -76,13 +74,13 @@ class PlayContainer extends StatelessWidget {
                   onPressed: () {
                     if (tempFavouriteList.contains(
                         realtimePlayingInfos1!.current!.audio.audio.metas.id)) {
-                      favouritesRemove(realtimePlayingInfos1!
-                          .current!.audio.audio.metas.id
-                          .toString());
+                      favouritesController.favouritesRemove(
+                          realtimePlayingInfos1!.current!.audio.audio.metas.id
+                              .toString());
                     } else {
-                      addFavouritesToDB(realtimePlayingInfos1!
-                          .current!.audio.audio.metas.id
-                          .toString());
+                      favouritesController.addFavouritesToDB(
+                          realtimePlayingInfos1!.current!.audio.audio.metas.id
+                              .toString());
                     }
                   },
                   icon: tempFavouriteList.contains(

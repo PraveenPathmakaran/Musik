@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+import '../../controller/favorite_screen/screen_favourites_controller.dart';
 import '../../core/colors.dart';
 import '../../db/db_functions.dart';
 import '../../functions/audio_functions.dart';
 import '../../functions/design_widgets.dart';
 import '../../model/music_model.dart';
-import '../favourite_screen/favourites_functions.dart';
 import '../home_screen/screen_home.dart';
 import 'package:get/get.dart';
 
@@ -18,16 +18,13 @@ List<MusicModel> allAudioListFromDB = [];
 List<MusicModel> allMusicModelSongs = []; //map converted to music model
 List<String> tempFavouriteList = []; //favourite audi songs id list
 List<Audio> audioSongsList = []; //converted audio list audiomodel
-
-ValueNotifier<List<MusicModel>> favouritesListFromDb =
-    ValueNotifier([]); //for add and remove
-
-// final favouritesListFromDb = [].obs;
+final favouritesListFromDb = <MusicModel>[].obs;
 
 class ScreenSplash extends StatelessWidget {
-  const ScreenSplash({Key? key}) : super(key: key);
+  ScreenSplash({Key? key}) : super(key: key);
 
   static const audioChannel = MethodChannel("audio");
+  final favouritesController = Get.put(FavouritesController());
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -88,6 +85,6 @@ class ScreenSplash extends StatelessWidget {
 
     await addAudiosToDB();
     await createAudiosFileList(allAudioListFromDB);
-    await getAllFavouritesFromDB();
+    await favouritesController.getAllFavouritesFromDB();
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:newmusicplayer/controller/favorite_screen/screen_favourites_controller.dart';
 import '../../core/colors.dart';
 import '../../functions/audio_functions.dart';
 import '../../functions/design_widgets.dart';
 import '../../model/music_model.dart';
-import '../favourite_screen/favourites_functions.dart';
 import '../favourite_screen/screen_favourite.dart';
 import '../play_screen/screen_play.dart';
 import '../splash_screen/screen_splash.dart';
@@ -16,8 +17,10 @@ List<String> tempPlaylistId = [];
 
 class ScreenPlaylistAudios extends StatelessWidget {
   final String playlistname;
-  const ScreenPlaylistAudios({Key? key, required this.playlistname})
+  ScreenPlaylistAudios({Key? key, required this.playlistname})
       : super(key: key);
+
+  final favouritesController = Get.put(FavouritesController());
 
   @override
   Widget build(BuildContext context, {bool mounted = true}) {
@@ -152,17 +155,6 @@ class ScreenPlaylistAudios extends StatelessWidget {
                                               ),
                                               TextButton(
                                                   onPressed: () {
-                                                    // if (playlistAudioListUpdate) {
-                                                    //   audioPlayer
-                                                    //       .playlist!.audios
-                                                    //       .removeWhere((element) =>
-                                                    //           element
-                                                    //               .metas.id ==
-                                                    //           playlistSongsFromDB
-                                                    //               .value[index]
-                                                    //               .id
-                                                    //               .toString());
-                                                    // }
                                                     playlistSongDelete(
                                                         playlistSongsFromDB
                                                             .value[index].id
@@ -186,14 +178,20 @@ class ScreenPlaylistAudios extends StatelessWidget {
                                                             playlistSongsFromDB
                                                                 .value[index].id
                                                                 .toString())
-                                                        ? favouritesRemove(
-                                                            playlistSongsFromDB
-                                                                .value[index].id
-                                                                .toString())
-                                                        : addFavouritesToDB(
-                                                            playlistSongsFromDB
-                                                                .value[index].id
-                                                                .toString());
+                                                        ? favouritesController
+                                                            .favouritesRemove(
+                                                                playlistSongsFromDB
+                                                                    .value[
+                                                                        index]
+                                                                    .id
+                                                                    .toString())
+                                                        : favouritesController
+                                                            .addFavouritesToDB(
+                                                                playlistSongsFromDB
+                                                                    .value[
+                                                                        index]
+                                                                    .id
+                                                                    .toString());
                                                     Navigator.pop(context);
                                                     tempFavouriteList.contains(
                                                             playlistSongsFromDB
@@ -208,30 +206,22 @@ class ScreenPlaylistAudios extends StatelessWidget {
                                                             kBackgroundColor2,
                                                             context);
                                                   },
-                                                  child: ValueListenableBuilder(
-                                                    valueListenable:
-                                                        favouritesListFromDb,
-                                                    builder: (context, value,
-                                                        child) {
-                                                      return tempFavouriteList
-                                                              .contains(
-                                                                  playlistSongsFromDB
-                                                                      .value[
-                                                                          index]
-                                                                      .id
-                                                                      .toString())
-                                                          ? functionText(
-                                                              "Remove From Favourites",
-                                                              Colors.white,
-                                                              FontWeight.bold,
-                                                              20)
-                                                          : functionText(
-                                                              "Add to Favourites",
-                                                              Colors.white,
-                                                              FontWeight.bold,
-                                                              20);
-                                                    },
-                                                  ))
+                                                  child: tempFavouriteList
+                                                          .contains(
+                                                              playlistSongsFromDB
+                                                                  .value[index]
+                                                                  .id
+                                                                  .toString())
+                                                      ? functionText(
+                                                          "Remove From Favourites",
+                                                          Colors.white,
+                                                          FontWeight.bold,
+                                                          20)
+                                                      : functionText(
+                                                          "Add to Favourites",
+                                                          Colors.white,
+                                                          FontWeight.bold,
+                                                          20))
                                             ],
                                           ),
                                         );

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:newmusicplayer/controller/favorite_screen/screen_favourites_controller.dart';
 import '../../core/colors.dart';
 import '../../functions/audio_functions.dart';
 import '../../functions/design_widgets.dart';
-import '../favourite_screen/favourites_functions.dart';
 import '../favourite_screen/screen_favourite.dart';
 import '../play_screen/screen_play.dart';
 import '../playlist_screen/screen_playlist.dart';
@@ -248,8 +249,9 @@ class DrawerContent extends StatelessWidget {
 class HomeBottomSheet extends StatelessWidget {
   final String id;
   final int? index;
-  const HomeBottomSheet({Key? key, required this.id, this.index})
-      : super(key: key);
+  HomeBottomSheet({Key? key, required this.id, this.index}) : super(key: key);
+
+  final favouritesController = Get.put(FavouritesController());
 
   @override
   Widget build(BuildContext context, {bool value = true}) {
@@ -272,36 +274,20 @@ class HomeBottomSheet extends StatelessWidget {
         ),
         TextButton(
             onPressed: () async {
-              // if (tempFavouriteList.contains(id)) {
-              //   if (tabController.index == 1 &&
-              //       audioPlayer.playlist!.audios.isNotEmpty &&
-              //       favouritesAudioListUpdate) {
-              //     audioPlayer.playlist!.audios
-              //         .removeWhere((element) => element.metas.id == id);
-              //   }
-              //   await favouritesRemove(id);
-              // } else {
-              //   await addFavouritesToDB(id);
-              // }
               tempFavouriteList.contains(id)
-                  ? favouritesRemove(id)
-                  : addFavouritesToDB(id);
+                  ? favouritesController.favouritesRemove(id)
+                  : favouritesController.addFavouritesToDB(id);
               if (!value) {}
               Navigator.pop(context);
               tempFavouriteList.contains(id)
                   ? snackBar("Added to favourites", kBackgroundColor2, context)
                   : snackBar("Removed Succesfully", kBackgroundColor2, context);
             },
-            child: ValueListenableBuilder(
-              valueListenable: favouritesListFromDb,
-              builder: (context, value, child) {
-                return tempFavouriteList.contains(id)
-                    ? functionText("Remove From Favourites", Colors.white,
-                        FontWeight.bold, 20)
-                    : functionText(
-                        "Add to Favourites", Colors.white, FontWeight.bold, 20);
-              },
-            )),
+            child: tempFavouriteList.contains(id)
+                ? functionText(
+                    "Remove From Favourites", Colors.white, FontWeight.bold, 20)
+                : functionText(
+                    "Add to Favourites", Colors.white, FontWeight.bold, 20)),
         TextButton(
           child: functionText(
               "Add to Playlist ", Colors.white, FontWeight.bold, 20),

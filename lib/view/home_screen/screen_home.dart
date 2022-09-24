@@ -72,7 +72,7 @@ class _ScreenHomeState extends State<ScreenHomeMain>
                               ),
                             ),
                             builder: (context) {
-                              return const ScreenAddToFavourits();
+                              return ScreenAddToFavourits();
                             });
                       } else if (tabController.index == 2) {
                         openDialog(context);

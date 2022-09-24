@@ -33,7 +33,7 @@ class MusicApp extends StatelessWidget {
         hoverColor: Colors.transparent,
       ),
       debugShowCheckedModeBanner: false,
-      home: const ScreenSplash(),
+      home: ScreenSplash(),
     );
   }
 }
