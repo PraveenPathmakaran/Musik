@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+import '../../core/colors.dart';
 import '../../db/db_functions.dart';
 import '../../functions/audio_functions.dart';
 import '../../functions/design_widgets.dart';
 import '../../model/music_model.dart';
 import '../favourite_screen/favourites_functions.dart';
 import '../home_screen/screen_home.dart';
+import 'package:get/get.dart';
 
 final audioPlayer = AssetsAudioPlayer.withId("0");
 List<MusicModel> allAudioListFromDB = [];
@@ -20,23 +22,17 @@ List<Audio> audioSongsList = []; //converted audio list audiomodel
 ValueNotifier<List<MusicModel>> favouritesListFromDb =
     ValueNotifier([]); //for add and remove
 
-class ScreenSplash extends StatefulWidget {
+// final favouritesListFromDb = [].obs;
+
+class ScreenSplash extends StatelessWidget {
   const ScreenSplash({Key? key}) : super(key: key);
 
-  @override
-  State<ScreenSplash> createState() => _ScreenSplashState();
-}
-
-class _ScreenSplashState extends State<ScreenSplash> {
   static const audioChannel = MethodChannel("audio");
   @override
-  void initState() {
-    gotoHome(context);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await gotoHome(context);
+    });
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -46,13 +42,13 @@ class _ScreenSplashState extends State<ScreenSplash> {
             children: [
               functionText(
                 appName,
-                whiteColor,
+                kWhiteColor,
                 FontWeight.bold,
                 48,
               ),
               functionText(
                 'Music Player',
-                whiteColor,
+                kWhiteColor,
                 FontWeight.bold,
                 24,
               ),
@@ -64,26 +60,17 @@ class _ScreenSplashState extends State<ScreenSplash> {
   }
 
 //Storage permission
-  Future<void> gotoHome(BuildContext context, {bool mounted = true}) async {
+  Future<void> gotoHome(BuildContext context) async {
     try {
       if (await Permission.storage.request().isGranted) {
         await getAllAudios();
-        if (!mounted) return;
-        await Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (ctx) {
-            return const ScreenHomeMain();
-          }),
-        );
+        await Get.off(const ScreenHomeMain());
       } else {
         await Permission.storage.request();
         if (await Permission.storage.request().isGranted) {
           await getAllAudios();
-          if (!mounted) return;
-          await Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (ctx) {
-              return const ScreenHomeMain();
-            }),
-          );
+
+          await Get.off(const ScreenHomeMain());
         } else {}
       }
     } catch (e) {

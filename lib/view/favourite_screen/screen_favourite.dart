@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/colors.dart';
 import '../../functions/audio_functions.dart';
 import '../../functions/design_widgets.dart';
 import '../home_screen/home_widgets.dart';
@@ -34,7 +35,7 @@ class ScreenFavourite extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
-                      color: colorListTile,
+                      color: kColorListTile,
                       child: ListTile(
                         onTap: () async {
                           await createAudiosFileList(
@@ -75,7 +76,7 @@ class ScreenFavourite extends StatelessWidget {
                           icon: functionIcon(Icons.more_vert, 20, Colors.white),
                           onPressed: () async {
                             showModalBottomSheet(
-                                backgroundColor: appbarColor,
+                                backgroundColor: kAppbarColor,
                                 context: context,
                                 shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(

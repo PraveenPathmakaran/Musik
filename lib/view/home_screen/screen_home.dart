@@ -1,5 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import '../../core/colors.dart';
 import '../../functions/design_widgets.dart';
 import '../favourite_screen/screen_addtofavourite.dart';
 import '../favourite_screen/screen_favourite.dart';
@@ -59,7 +60,7 @@ class _ScreenHomeState extends State<ScreenHomeMain>
               floatingActionButton: Visibility(
                 visible: floatingBtnVisibility,
                 child: FloatingActionButton(
-                    backgroundColor: appbarColor,
+                    backgroundColor: kAppbarColor,
                     onPressed: (() {
                       if (tabController.index == 1) {
                         showModalBottomSheet(
@@ -81,30 +82,30 @@ class _ScreenHomeState extends State<ScreenHomeMain>
               ),
               backgroundColor: Colors.black,
               extendBodyBehindAppBar: true,
-              drawer: Drawer(
+              drawer: const Drawer(
                 width: 250,
-                backgroundColor: appbarColor,
-                child: const DrawerContent(),
+                backgroundColor: kAppbarColor,
+                child: DrawerContent(),
               ),
               appBar: AppBar(
                 title: const Text('Music Player'),
                 centerTitle: true,
-                backgroundColor: appbarColor,
+                backgroundColor: kAppbarColor,
                 bottom: TabBar(
                   onTap: (value) {},
                   controller: tabController,
                   tabs: [
                     Tab(
                       text: 'Home',
-                      icon: functionIcon(Icons.home, 25, whiteColor),
+                      icon: functionIcon(Icons.home, 25, kWhiteColor),
                     ),
                     Tab(
                       text: 'Favourites',
-                      icon: functionIcon(Icons.favorite, 25, whiteColor),
+                      icon: functionIcon(Icons.favorite, 25, kWhiteColor),
                     ),
                     Tab(
                       text: 'Playlist',
-                      icon: functionIcon(Icons.playlist_play, 25, whiteColor),
+                      icon: functionIcon(Icons.playlist_play, 25, kWhiteColor),
                     ),
                   ],
                 ),

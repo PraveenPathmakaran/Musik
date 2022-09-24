@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/colors.dart';
 import '../../functions/audio_functions.dart';
 import '../../functions/design_widgets.dart';
 import '../../model/music_model.dart';
@@ -26,13 +27,13 @@ class ScreenPlaylistAudios extends StatelessWidget {
           return Scaffold(
             backgroundColor: Colors.black,
             appBar: AppBar(
-              backgroundColor: appbarColor,
+              backgroundColor: kAppbarColor,
               elevation: 0,
               title: Text(playlistname),
               centerTitle: true,
             ),
             floatingActionButton: FloatingActionButton(
-                backgroundColor: appbarColor,
+                backgroundColor: kAppbarColor,
                 onPressed: (() {
                   showModalBottomSheet(
                       backgroundColor: Colors.black,
@@ -69,7 +70,7 @@ class ScreenPlaylistAudios extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
-                              color: colorListTile,
+                              color: kColorListTile,
                               child: ListTile(
                                 onTap: () async {
                                   await createAudiosFileList(
@@ -111,7 +112,7 @@ class ScreenPlaylistAudios extends StatelessWidget {
                                       Icons.more_vert, 25, Colors.white),
                                   onPressed: () {
                                     showModalBottomSheet(
-                                      backgroundColor: appbarColor,
+                                      backgroundColor: kAppbarColor,
                                       shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.vertical(
                                           top: Radius.circular(30),
@@ -170,7 +171,7 @@ class ScreenPlaylistAudios extends StatelessWidget {
 
                                                     snackBar(
                                                         "Removed From $playlistname",
-                                                        backgroundColor2,
+                                                        kBackgroundColor2,
                                                         context);
                                                     Navigator.pop(context);
                                                   },
@@ -200,11 +201,11 @@ class ScreenPlaylistAudios extends StatelessWidget {
                                                                 .toString())
                                                         ? snackBar(
                                                             "Added to favourites",
-                                                            backgroundColor2,
+                                                            kBackgroundColor2,
                                                             context)
                                                         : snackBar(
                                                             "Removed Succesfully",
-                                                            backgroundColor2,
+                                                            kBackgroundColor2,
                                                             context);
                                                   },
                                                   child: ValueListenableBuilder(

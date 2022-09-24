@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/colors.dart';
 import '../../functions/design_widgets.dart';
 import '../splash_screen/screen_splash.dart';
 import 'favourites_functions.dart';
@@ -39,7 +40,7 @@ class ScreenAddToFavourits extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
-                        color: colorListTile,
+                        color: kColorListTile,
                         child: ListTile(
                           leading: const CircleAvatar(
                             radius: 35,

@@ -1,14 +1,15 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../controller/play_screen/screen_play_controller.dart';
+import '../../core/colors.dart';
 import '../../functions/design_widgets.dart';
 import '../favourite_screen/favourites_functions.dart';
 import '../playlist_screen/screen_playlist.dart';
 import '../splash_screen/screen_splash.dart';
 
 RealtimePlayingInfos? realtimePlayingInfos1;
-
-ValueNotifier<bool> loopButton = ValueNotifier(true);
 
 class ScreenPlay extends StatelessWidget {
   const ScreenPlay({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class ScreenPlay extends StatelessWidget {
       body: audioPlayer.builderRealtimePlayingInfos(
           builder: (contex, realtimePlayingInfos) {
         realtimePlayingInfos1 = realtimePlayingInfos;
+
         // ignore: prefer_const_constructors
         return PlayContainer();
       }),
@@ -34,7 +36,9 @@ class ScreenPlay extends StatelessWidget {
 }
 
 class PlayContainer extends StatelessWidget {
-  const PlayContainer({Key? key}) : super(key: key);
+  PlayContainer({Key? key}) : super(key: key);
+  final ScreenPlayController screenPlayController =
+      Get.put(ScreenPlayController());
 
   @override
   Widget build(BuildContext context) {
@@ -69,50 +73,44 @@ class PlayContainer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton(
+                  onPressed: () {
+                    if (tempFavouriteList.contains(
+                        realtimePlayingInfos1!.current!.audio.audio.metas.id)) {
+                      favouritesRemove(realtimePlayingInfos1!
+                          .current!.audio.audio.metas.id
+                          .toString());
+                    } else {
+                      addFavouritesToDB(realtimePlayingInfos1!
+                          .current!.audio.audio.metas.id
+                          .toString());
+                    }
+                  },
+                  icon: tempFavouriteList.contains(
+                          realtimePlayingInfos1!.current!.audio.audio.metas.id)
+                      ? functionIcon(Icons.favorite, 30, kRoseColor)
+                      : functionIcon(Icons.favorite, 30, Colors.white)),
+              IconButton(
                 onPressed: () {
-                  if (tempFavouriteList.contains(
-                      realtimePlayingInfos1!.current!.audio.audio.metas.id)) {
-                    favouritesRemove(realtimePlayingInfos1!
-                        .current!.audio.audio.metas.id
-                        .toString());
+                  if (screenPlayController.loopButton.value) {
+                    audioPlayer.setLoopMode(LoopMode.single);
+                    screenPlayController.loopButton.value = false;
                   } else {
-                    addFavouritesToDB(realtimePlayingInfos1!
-                        .current!.audio.audio.metas.id
-                        .toString());
+                    audioPlayer.setLoopMode(LoopMode.none);
+                    screenPlayController.loopButton.value = true;
                   }
                 },
-                icon: ValueListenableBuilder(
-                  valueListenable: favouritesListFromDb,
-                  builder: (context, value, child) {
-                    return tempFavouriteList.contains(realtimePlayingInfos1!
-                            .current!.audio.audio.metas.id)
-                        ? functionIcon(Icons.favorite, 30, roseColor)
-                        : functionIcon(Icons.favorite, 30, Colors.white);
+                icon: Obx(
+                  () {
+                    return screenPlayController.loopButton.value
+                        ? functionIcon(Icons.repeat, 35, kWhiteColor)
+                        : functionIcon(Icons.repeat_one, 35, kWhiteColor);
                   },
                 ),
               ),
               IconButton(
                   onPressed: () {
-                    if (loopButton.value) {
-                      audioPlayer.setLoopMode(LoopMode.single);
-                      loopButton.value = false;
-                    } else {
-                      audioPlayer.setLoopMode(LoopMode.none);
-                      loopButton.value = true;
-                    }
-                  },
-                  icon: ValueListenableBuilder(
-                    valueListenable: loopButton,
-                    builder: (context, value, child) {
-                      return loopButton.value
-                          ? functionIcon(Icons.repeat, 35, whiteColor)
-                          : functionIcon(Icons.repeat_one, 35, whiteColor);
-                    },
-                  )),
-              IconButton(
-                  onPressed: () {
                     showModalBottomSheet(
-                        backgroundColor: backgroundColor2,
+                        backgroundColor: kBackgroundColor2,
                         context: context,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(
@@ -127,7 +125,7 @@ class PlayContainer extends StatelessWidget {
                           );
                         });
                   },
-                  icon: functionIcon(Icons.playlist_play, 35, whiteColor))
+                  icon: functionIcon(Icons.playlist_play, 35, kWhiteColor))
             ],
           ),
           SizedBox(

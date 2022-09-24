@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/colors.dart';
 import '../../functions/design_widgets.dart';
 import '../splash_screen/screen_splash.dart';
 import 'playlist_functions.dart';
@@ -38,7 +39,7 @@ class SreenAddToPlaylist extends StatelessWidget {
                   controller: ScrollController(),
                   itemBuilder: ((context, index) {
                     return Card(
-                      color: colorListTile,
+                      color: kColorListTile,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),

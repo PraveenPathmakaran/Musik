@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:newmusicplayer/screens/splash_screen/screen_splash.dart';
+import 'package:newmusicplayer/view/splash_screen/screen_splash.dart';
 import 'model/music_model.dart';
 
 late Box<List<MusicModel>> musicDB;
@@ -20,17 +21,12 @@ Future<void> main() async {
   runApp(const MusicApp());
 }
 
-class MusicApp extends StatefulWidget {
+class MusicApp extends StatelessWidget {
   const MusicApp({Key? key}) : super(key: key);
 
   @override
-  State<MusicApp> createState() => _MusicAppState();
-}
-
-class _MusicAppState extends State<MusicApp> {
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       theme: ThemeData(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,

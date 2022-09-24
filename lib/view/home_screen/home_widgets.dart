@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../core/colors.dart';
 import '../../functions/audio_functions.dart';
 import '../../functions/design_widgets.dart';
 import '../favourite_screen/favourites_functions.dart';
@@ -83,7 +84,7 @@ class _ScreenHomeState extends State<ScreenHome>
                                 functionIcon(Icons.more_vert, 20, Colors.white),
                             onPressed: () {
                               showModalBottomSheet(
-                                  backgroundColor: appbarColor,
+                                  backgroundColor: kAppbarColor,
                                   context: context,
                                   shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.vertical(
@@ -132,11 +133,12 @@ class DrawerContent extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  functionText(appName, whiteColor, FontWeight.bold, 35),
+                  functionText(appName, kWhiteColor, FontWeight.bold, 35),
                   SizedBox(
                     height: height * 0.01,
                   ),
-                  functionText('Music Player', whiteColor, FontWeight.bold, 25),
+                  functionText(
+                      'Music Player', kWhiteColor, FontWeight.bold, 25),
                   const SizedBox(
                     height: 50,
                   ),
@@ -147,8 +149,8 @@ class DrawerContent extends StatelessWidget {
                           valueListenable: notification,
                           builder: (context, value, child) {
                             return Switch(
-                              activeTrackColor: roseColor,
-                              activeColor: whiteColor,
+                              activeTrackColor: kRoseColor,
+                              activeColor: kWhiteColor,
                               inactiveTrackColor: Colors.white,
                               value: notification.value,
                               onChanged: ((value) {
@@ -287,8 +289,8 @@ class HomeBottomSheet extends StatelessWidget {
               if (!value) {}
               Navigator.pop(context);
               tempFavouriteList.contains(id)
-                  ? snackBar("Added to favourites", backgroundColor2, context)
-                  : snackBar("Removed Succesfully", backgroundColor2, context);
+                  ? snackBar("Added to favourites", kBackgroundColor2, context)
+                  : snackBar("Removed Succesfully", kBackgroundColor2, context);
             },
             child: ValueListenableBuilder(
               valueListenable: favouritesListFromDb,
@@ -306,7 +308,7 @@ class HomeBottomSheet extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
             showModalBottomSheet(
-                backgroundColor: appbarColor,
+                backgroundColor: kAppbarColor,
                 context: context,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/colors.dart';
 import '../../db/db_functions.dart';
 import '../../functions/design_widgets.dart';
 import 'playlist_functions.dart';
@@ -37,7 +38,7 @@ class ScreenPlaylist extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
-                        color: colorListTile,
+                        color: kColorListTile,
                         child: Center(
                           child: ListTile(
                             onTap: (() {
@@ -70,7 +71,7 @@ class ScreenPlaylist extends StatelessWidget {
                                       Icons.more_vert, 20, Colors.white),
                                   onPressed: () {
                                     showModalBottomSheet(
-                                      backgroundColor: appbarColor,
+                                      backgroundColor: kAppbarColor,
                                       shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.vertical(
                                           top: Radius.circular(30),
@@ -115,7 +116,7 @@ class ScreenPlaylist extends StatelessWidget {
                                                       .toString());
                                                   snackBar(
                                                       "Deleted Successfully",
-                                                      backgroundColor2,
+                                                      kBackgroundColor2,
                                                       context);
                                                   Navigator.pop(context);
                                                 },
@@ -211,7 +212,7 @@ class ScreenAddToPlaylistFromHome extends StatelessWidget {
                     addtoPlaylistSongs(id, allkey.value[index].toString());
                     Navigator.pop(context);
                     snackBar("Added to ${allkey.value[index].toString()}",
-                        backgroundColor2, context);
+                        kBackgroundColor2, context);
                   }),
                   leading: const Icon(
                     Icons.playlist_play,

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
-import '../screens/splash_screen/screen_splash.dart';
+import '../view/splash_screen/screen_splash.dart';
 
 ValueNotifier<List<dynamic>> allkey = ValueNotifier([]);
 Future<void> addAudiosToDB() async {

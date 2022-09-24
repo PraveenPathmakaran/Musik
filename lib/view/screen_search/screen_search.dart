@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/colors.dart';
 import '../../functions/audio_functions.dart';
 import '../../functions/design_widgets.dart';
 import '../favourite_screen/screen_favourite.dart';
@@ -44,7 +45,7 @@ class MusicSearch extends SearchDelegate {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
-            color: colorListTile,
+            color: kColorListTile,
             child: ListTile(
               leading: const CircleAvatar(
                 radius: 25,
@@ -65,7 +66,7 @@ class MusicSearch extends SearchDelegate {
                 icon: functionIcon(Icons.more_horiz, 20, Colors.white),
                 onPressed: () {
                   showModalBottomSheet(
-                      backgroundColor: backgroundColor2,
+                      backgroundColor: kBackgroundColor2,
                       context: context,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.vertical(
@@ -131,7 +132,7 @@ class MusicSearch extends SearchDelegate {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0),
                   ),
-                  color: colorListTile,
+                  color: kColorListTile,
                   child: ListTile(
                     leading: const CircleAvatar(
                       radius: 25,
@@ -153,7 +154,7 @@ class MusicSearch extends SearchDelegate {
                       icon: functionIcon(Icons.more_horiz, 20, Colors.white),
                       onPressed: () {
                         showModalBottomSheet(
-                            backgroundColor: backgroundColor2,
+                            backgroundColor: kBackgroundColor2,
                             context: context,
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.vertical(
@@ -194,7 +195,7 @@ class MusicSearch extends SearchDelegate {
   @override
   ThemeData appBarTheme(BuildContext context) {
     return ThemeData(
-      appBarTheme: AppBarTheme(backgroundColor: appbarColor),
+      appBarTheme: const AppBarTheme(backgroundColor: kAppbarColor),
       textTheme: const TextTheme(headline6: TextStyle(color: Colors.white)),
       hintColor: Colors.white,
       inputDecorationTheme: const InputDecorationTheme(

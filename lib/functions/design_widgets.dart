@@ -1,14 +1,9 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
-import '../screens/play_screen/screen_play.dart';
-import '../screens/splash_screen/screen_splash.dart';
+import '../core/colors.dart';
+import '../view/play_screen/screen_play.dart';
+import '../view/splash_screen/screen_splash.dart';
 
-Color backgroundColor1 = const Color(0xFF2C3639);
-Color backgroundColor2 = const Color(0xFF1e1c1d);
-Color appbarColor = const Color(0xff0B2840);
-Color colorListTile = const Color(0xFF14202E);
-Color whiteColor = Colors.white;
-Color roseColor = const Color(0xFFaf1337);
 ValueNotifier<bool> notification = ValueNotifier(true);
 const String appName = "Musik";
 
@@ -52,7 +47,7 @@ Widget functionTextButton(Function() textFunction, String text) {
     onPressed: textFunction,
     child: functionText(
       text,
-      whiteColor,
+      kWhiteColor,
       FontWeight.bold,
       20,
     ),
@@ -65,7 +60,7 @@ Widget miniPlayer(BuildContext context) {
     child: audioPlayer.builderRealtimePlayingInfos(
         builder: (context, realtimePlayingInfos) {
       return Card(
-        color: appbarColor,
+        color: kAppbarColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25.0),
         ),

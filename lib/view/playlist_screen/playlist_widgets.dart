@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/colors.dart';
 import '../../functions/design_widgets.dart';
 import 'playlist_functions.dart';
 
@@ -9,7 +10,7 @@ Future openDialog(BuildContext context) async {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          backgroundColor: backgroundColor1,
+          backgroundColor: kBackgroundColor1,
           title: functionText(
               'Create Playlist', Colors.white, FontWeight.normal, 20),
           content: TextField(
@@ -17,10 +18,10 @@ Future openDialog(BuildContext context) async {
             cursorColor: Colors.white,
             controller: playlistTextController,
             autofocus: true,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 hintText: 'Playlist Name',
                 focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: roseColor))),
+                    borderSide: BorderSide(color: kRoseColor))),
           ),
           actions: [
             TextButton(
@@ -58,7 +59,7 @@ Future updatePlaylistName(BuildContext context, String playlistName) async {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          backgroundColor: backgroundColor1,
+          backgroundColor: kBackgroundColor1,
           title: functionText(
               'Update Playlist Name', Colors.white, FontWeight.normal, 20),
           content: TextFormField(
@@ -69,9 +70,9 @@ Future updatePlaylistName(BuildContext context, String playlistName) async {
             style: const TextStyle(color: Colors.white),
             cursorColor: Colors.white,
             autofocus: true,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: roseColor))),
+                    borderSide: BorderSide(color: kRoseColor))),
           ),
           actions: [
             TextButton(
