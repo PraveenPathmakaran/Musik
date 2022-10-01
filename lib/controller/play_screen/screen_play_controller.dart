@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
 
 class ScreenPlayController extends GetxController {
-  final loopButton = true.obs;
+  final RxBool loopButton = true.obs;
 }

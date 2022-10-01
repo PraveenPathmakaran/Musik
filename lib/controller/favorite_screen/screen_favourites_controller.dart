@@ -1,6 +1,8 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:get/get.dart';
 import '../../main.dart';
-import '../../view/splash_screen/screen_splash.dart';
+import '../../model/music_model.dart';
+import '../splash_screen/screen_splash.dart';
 
 class FavouritesController extends GetxController {
   Future<void> addFavouritesToDB(String id) async {
@@ -8,7 +10,7 @@ class FavouritesController extends GetxController {
       return;
     } else {
       tempFavouriteList.add(id);
-      await favouriteDB.put("favourite", tempFavouriteList);
+      await favouriteDB.put('favourite', tempFavouriteList);
       getAllFavouritesFromDB();
     }
   }
@@ -17,22 +19,25 @@ class FavouritesController extends GetxController {
     if (favouriteDB.isEmpty) {
       return;
     }
-    tempFavouriteList = favouriteDB.get("favourite")!;
+    tempFavouriteList = favouriteDB.get('favourite')!;
     await getFavouritesAudios(tempFavouriteList);
   }
 
   Future<void> getFavouritesAudios(List<String> favouritesList) async {
-    favouritesListFromDb.value = allAudioListFromDB.where((element) {
+    favouritesListFromDb.value = allAudioListFromDB.where((MusicModel element) {
       return favouritesList.contains(element.id);
     }).toList();
     favouritesListFromDb.sort(
-      (a, b) => a.title!.compareTo(b.title!),
+      (MusicModel a, MusicModel b) => a.title!.compareTo(b.title!),
     );
   }
 
   Future<void> favouritesRemove(String id) async {
     tempFavouriteList.remove(id);
-    await favouriteDB.put("favourite", tempFavouriteList);
+    final Audio audio =
+        audioSongsList.firstWhere((Audio element) => element.metas.id == id);
+    audioPlayer.playlist!.remove(audio);
+    await favouriteDB.put('favourite', tempFavouriteList);
     await getFavouritesAudios(tempFavouriteList);
     await getAllFavouritesFromDB();
   }

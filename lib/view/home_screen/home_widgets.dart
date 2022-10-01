@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:newmusicplayer/controller/favorite_screen/screen_favourites_controller.dart';
+import '../../controller/audio_functions.dart';
+import '../../controller/home_screen/home_screen_controller.dart';
+import '../../controller/playlist_Screen/screen_playlist_controller.dart';
+import '../../controller/splash_screen/screen_splash.dart';
 import '../../core/colors.dart';
-import '../../functions/audio_functions.dart';
-import '../../functions/design_widgets.dart';
 import '../favourite_screen/screen_favourite.dart';
 import '../play_screen/screen_play.dart';
-import '../playlist_screen/screen_playlist.dart';
-import '../playlist_screen/screen_playlist_songs.dart';
-import '../splash_screen/screen_splash.dart';
+import '../widgets.dart';
+import 'screen_home_bottomsheet.dart';
 
 class ScreenHome extends StatefulWidget {
-  const ScreenHome({Key? key}) : super(key: key);
+  const ScreenHome({super.key});
 
   @override
   State<ScreenHome> createState() => _ScreenHomeState();
@@ -20,6 +19,11 @@ class ScreenHome extends StatefulWidget {
 
 class _ScreenHomeState extends State<ScreenHome>
     with AutomaticKeepAliveClientMixin {
+  final HomeScreenController _homeScreenController =
+      Get.put(HomeScreenController());
+
+  final PlaylistController _playlistController = Get.put(PlaylistController());
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -28,17 +32,17 @@ class _ScreenHomeState extends State<ScreenHome>
             color: Colors.black,
             child: Center(
               child: functionText(
-                  "No Songs Found", Colors.white, FontWeight.bold, 20),
+                  'No Songs Found', Colors.white, FontWeight.bold, 20),
             ),
           )
         : Container(
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
             color: Colors.black,
             child: SingleChildScrollView(
-              child: Column(children: [
+              child: Column(children: <Widget>[
                 ListView.builder(
                   controller: ScrollController(),
-                  itemBuilder: ((context, index) {
+                  itemBuilder: (BuildContext context, int index) {
                     return Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
@@ -49,18 +53,12 @@ class _ScreenHomeState extends State<ScreenHome>
                           onTap: () async {
                             await createAudiosFileList(allAudioListFromDB);
                             await audioPlayer.playlistPlayAtIndex(index);
-                            if (!mounted) return;
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return const ScreenPlay();
-                                },
-                              ),
-                            );
-                            miniPlayerVisibility.value = true;
+                            await Get.to(const ScreenPlay());
+
+                            _homeScreenController.miniPlayerVisibility.value =
+                                true;
                             favouritesAudioListUpdate = false;
-                            playlistAudioListUpdate = false;
+                            _playlistController.playlistAudioListUpdate = false;
                           },
                           leading: const CircleAvatar(
                             radius: 28,
@@ -92,7 +90,7 @@ class _ScreenHomeState extends State<ScreenHome>
                                       top: Radius.circular(30),
                                     ),
                                   ),
-                                  builder: (ctx) {
+                                  builder: (BuildContext ctx) {
                                     return SizedBox(
                                       height: 300,
                                       child: HomeBottomSheet(
@@ -105,7 +103,7 @@ class _ScreenHomeState extends State<ScreenHome>
                             },
                           )),
                     );
-                  }),
+                  },
                   itemCount: allAudioListFromDB.length,
                   shrinkWrap: true,
                 ),
@@ -116,199 +114,4 @@ class _ScreenHomeState extends State<ScreenHome>
 
   @override
   bool get wantKeepAlive => true;
-}
-
-class DrawerContent extends StatelessWidget {
-  const DrawerContent({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(26.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  functionText(appName, kWhiteColor, FontWeight.bold, 35),
-                  SizedBox(
-                    height: height * 0.01,
-                  ),
-                  functionText(
-                      'Music Player', kWhiteColor, FontWeight.bold, 25),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    children: [
-                      functionTextButton(() {}, 'Notifications'),
-                      ValueListenableBuilder(
-                          valueListenable: notification,
-                          builder: (context, value, child) {
-                            return Switch(
-                              activeTrackColor: kRoseColor,
-                              activeColor: kWhiteColor,
-                              inactiveTrackColor: Colors.white,
-                              value: notification.value,
-                              onChanged: ((value) {
-                                notification.value = value;
-                                audioPlayer.showNotification = value;
-                              }),
-                            );
-                          })
-                    ],
-                  ),
-                  functionTextButton(() {}, 'Share'),
-                  functionTextButton(() {}, 'Privacy Policy'),
-                  functionTextButton(() {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            titlePadding: const EdgeInsets.all(12),
-                            title: ListTile(
-                              contentPadding: const EdgeInsets.all(0),
-                              minVerticalPadding: 0,
-                              leading: const CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Colors.transparent,
-                                backgroundImage:
-                                    AssetImage('assets/images/musicIcon1.png'),
-                              ),
-                              title: functionText("Play\nMusic Player",
-                                  Colors.black, FontWeight.bold, 20),
-                              subtitle: const Text(
-                                  "It is a Ad free Music player Play all local storage musics"),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  showLicensePage(
-                                      context: context,
-                                      applicationName: "Musik",
-                                      applicationIcon: Image.asset(
-                                        "assets/images/appIcon.png",
-                                        width: 50,
-                                        height: 50,
-                                      ));
-                                },
-                                child: const Text("View License"),
-                              ),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("Close"))
-                            ],
-                          );
-                        });
-                  }, 'About'),
-                  functionTextButton(() {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text("Really"),
-                          content: const Text("Do you want to close the app?"),
-                          actions: <Widget>[
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                },
-                                child: const Text("No")),
-                            TextButton(
-                                onPressed: () {
-                                  SystemNavigator.pop();
-                                },
-                                child: const Text("Yes"))
-                          ],
-                        );
-                      },
-                    );
-                  }, 'Exit'),
-                ],
-              ),
-              Column(
-                children: [
-                  functionText("Version", Colors.white, FontWeight.bold, 15),
-                  functionText("1.0.0", Colors.white, FontWeight.bold, 10),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class HomeBottomSheet extends StatelessWidget {
-  final String id;
-  final int? index;
-  HomeBottomSheet({Key? key, required this.id, this.index}) : super(key: key);
-
-  final favouritesController = Get.put(FavouritesController());
-
-  @override
-  Widget build(BuildContext context, {bool value = true}) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.only(left: 8, right: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              functionText("", Colors.white, FontWeight.bold, 18),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child:
-                      functionText("Close", Colors.white, FontWeight.bold, 18))
-            ],
-          ),
-        ),
-        TextButton(
-            onPressed: () async {
-              tempFavouriteList.contains(id)
-                  ? favouritesController.favouritesRemove(id)
-                  : favouritesController.addFavouritesToDB(id);
-              if (!value) {}
-              Navigator.pop(context);
-              tempFavouriteList.contains(id)
-                  ? snackBar("Added to favourites", kBackgroundColor2, context)
-                  : snackBar("Removed Succesfully", kBackgroundColor2, context);
-            },
-            child: tempFavouriteList.contains(id)
-                ? functionText(
-                    "Remove From Favourites", Colors.white, FontWeight.bold, 20)
-                : functionText(
-                    "Add to Favourites", Colors.white, FontWeight.bold, 20)),
-        TextButton(
-          child: functionText(
-              "Add to Playlist ", Colors.white, FontWeight.bold, 20),
-          onPressed: () {
-            Navigator.pop(context);
-            showModalBottomSheet(
-                backgroundColor: kAppbarColor,
-                context: context,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(30),
-                  ),
-                ),
-                builder: (context) {
-                  return ScreenAddToPlaylistFromHome(
-                    id: id,
-                  );
-                });
-          },
-        ),
-      ],
-    );
-  }
 }

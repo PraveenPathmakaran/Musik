@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../controller/audio_functions.dart';
+import '../../controller/home_screen/home_screen_controller.dart';
+import '../../controller/playlist_Screen/screen_playlist_controller.dart';
+import '../../controller/splash_screen/screen_splash.dart';
 import '../../core/colors.dart';
-import '../../functions/audio_functions.dart';
-import '../../functions/design_widgets.dart';
-import '../home_screen/home_widgets.dart';
+import '../home_screen/screen_home_bottomsheet.dart';
 import '../play_screen/screen_play.dart';
-import '../playlist_screen/screen_playlist_songs.dart';
-import '../splash_screen/screen_splash.dart';
+import '../widgets.dart';
 
 bool favouritesAudioListUpdate = false; //favourite list remove option
 
 class ScreenFavourite extends StatelessWidget {
-  const ScreenFavourite({Key? key}) : super(key: key);
+  ScreenFavourite({super.key});
+  final HomeScreenController _homeScreenController =
+      Get.put(HomeScreenController());
+  final PlaylistController _playlistController = Get.put(PlaylistController());
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,7 @@ class ScreenFavourite extends StatelessWidget {
               color: Colors.black,
               child: Center(
                 child: functionText(
-                    "No Songs Found", Colors.white, FontWeight.bold, 20),
+                    'No Songs Found', Colors.white, FontWeight.bold, 20),
               ),
             )
           : Container(
@@ -29,7 +34,7 @@ class ScreenFavourite extends StatelessWidget {
               color: Colors.black,
               child: ListView.builder(
                 controller: ScrollController(),
-                itemBuilder: ((context, index) {
+                itemBuilder: (BuildContext context, int index) {
                   return Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -40,9 +45,9 @@ class ScreenFavourite extends StatelessWidget {
                         await createAudiosFileList(favouritesListFromDb);
                         await audioPlayer.playlistPlayAtIndex(index);
                         await Get.to(const ScreenPlay());
-                        miniPlayerVisibility.value = true;
+                        _homeScreenController.miniPlayerVisibility.value = true;
                         favouritesAudioListUpdate = true;
-                        playlistAudioListUpdate = false;
+                        _playlistController.playlistAudioListUpdate = false;
                       },
                       leading: const CircleAvatar(
                         radius: 20,
@@ -73,7 +78,7 @@ class ScreenFavourite extends StatelessWidget {
                                   top: Radius.circular(30),
                                 ),
                               ),
-                              builder: (ctx) {
+                              builder: (BuildContext ctx) {
                                 return SizedBox(
                                   height: 300,
                                   child: HomeBottomSheet(
@@ -88,7 +93,7 @@ class ScreenFavourite extends StatelessWidget {
                       ),
                     ),
                   );
-                }),
+                },
                 itemCount: favouritesListFromDb.length,
                 shrinkWrap: true,
               ),

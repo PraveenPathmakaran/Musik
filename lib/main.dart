@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:newmusicplayer/view/splash_screen/screen_splash.dart';
 import 'model/music_model.dart';
+import 'view/splash_screen/screen_splash.dart';
 
 late Box<List<MusicModel>> musicDB;
 late Box<List<String>> favouriteDB;
@@ -22,7 +22,7 @@ Future<void> main() async {
 }
 
 class MusicApp extends StatelessWidget {
-  const MusicApp({Key? key}) : super(key: key);
+  const MusicApp({super.key});
 
   @override
   Widget build(BuildContext context) {

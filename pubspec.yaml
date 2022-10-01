@@ -40,6 +40,8 @@ dependencies:
   hive_flutter: ^1.1.0
   hive_generator: ^1.1.3
   get: ^4.6.5
+  share_plus: ^4.4.0
+  marquee: ^2.2.3
 
 dev_dependencies:
   flutter_test:

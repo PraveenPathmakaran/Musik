@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:newmusicplayer/controller/favorite_screen/screen_favourites_controller.dart';
+
+import '../../controller/favorite_screen/screen_favourites_controller.dart';
+import '../../controller/splash_screen/screen_splash.dart';
 import '../../core/colors.dart';
-import '../../functions/design_widgets.dart';
-import '../splash_screen/screen_splash.dart';
+import '../widgets.dart';
 
 class ScreenAddToFavourits extends StatelessWidget {
-  ScreenAddToFavourits({Key? key}) : super(key: key);
-  final favouritesController = Get.put(FavouritesController());
+  const ScreenAddToFavourits({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,72 +15,73 @@ class ScreenAddToFavourits extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(10),
         child: Column(
-          children: [
+          children: <Widget>[
             Container(
               padding: const EdgeInsets.only(left: 8, right: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: <Widget>[
                   functionText(
-                      "Add to Favourites", Colors.white, FontWeight.bold, 18),
+                      'Add to Favourites', Colors.white, FontWeight.bold, 18),
                   TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Get.back();
                       },
                       child: functionText(
-                          "Close", Colors.white, FontWeight.bold, 18))
+                          'Close', Colors.white, FontWeight.bold, 18))
                 ],
               ),
             ),
-            Obx(() {
-              return ListView.builder(
-                controller: ScrollController(),
-                itemBuilder: ((context, index) {
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+            ListView.builder(
+              controller: ScrollController(),
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  color: kColorListTile,
+                  child: ListTile(
+                    leading: const CircleAvatar(
+                      radius: 35,
+                      backgroundColor: Colors.transparent,
+                      backgroundImage:
+                          AssetImage('assets/images/musicIcon1.png'),
                     ),
-                    color: kColorListTile,
-                    child: ListTile(
-                      leading: const CircleAvatar(
-                        radius: 35,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage:
-                            AssetImage('assets/images/musicIcon1.png'),
-                      ),
-                      title: Text(
-                        allAudioListFromDB[index].title.toString(),
-                        maxLines: 1,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                      subtitle: Text(
-                        allAudioListFromDB[index].artist.toString(),
-                        maxLines: 1,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 10),
-                      ),
-                      trailing: IconButton(
-                        icon: favouritesListFromDb
+                    title: Text(
+                      allAudioListFromDB[index].title.toString(),
+                      maxLines: 1,
+                      style: const TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    subtitle: Text(
+                      allAudioListFromDB[index].artist.toString(),
+                      maxLines: 1,
+                      style: const TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                    trailing: IconButton(
+                      icon: Obx(() {
+                        return favouritesListFromDb
                                 .contains(allAudioListFromDB[index])
                             ? functionIcon(Icons.remove, 20, Colors.white)
-                            : functionIcon(Icons.add, 20, Colors.white),
-                        onPressed: () async {
-                          tempFavouriteList.contains(
-                                  allAudioListFromDB[index].id.toString())
-                              ? await favouritesController.favouritesRemove(
-                                  allAudioListFromDB[index].id.toString())
-                              : await favouritesController.addFavouritesToDB(
-                                  allAudioListFromDB[index].id.toString());
-                        },
-                      ),
+                            : functionIcon(Icons.add, 20, Colors.white);
+                      }),
+                      onPressed: () async {
+                        final FavouritesController favouritesController =
+                            Get.put(FavouritesController());
+
+                        tempFavouriteList.contains(
+                                allAudioListFromDB[index].id.toString())
+                            ? await favouritesController.favouritesRemove(
+                                allAudioListFromDB[index].id.toString())
+                            : await favouritesController.addFavouritesToDB(
+                                allAudioListFromDB[index].id.toString());
+                      },
                     ),
-                  );
-                }),
-                itemCount: allAudioListFromDB.length,
-                shrinkWrap: true,
-              );
-            })
+                  ),
+                );
+              },
+              itemCount: allAudioListFromDB.length,
+              shrinkWrap: true,
+            )
           ],
         ),
       ),

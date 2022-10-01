@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../controller/playlist_Screen/screen_playlist_controller.dart';
 import '../../core/colors.dart';
-import '../../functions/design_widgets.dart';
-import 'playlist_functions.dart';
+import '../widgets.dart';
 
 TextEditingController playlistTextController = TextEditingController();
+final PlaylistController playlistController = Get.put(PlaylistController());
 
-Future openDialog(BuildContext context) async {
+Future<dynamic> playlistCreateDialogue(BuildContext context) async {
   showDialog(
       context: context,
-      builder: (ctx) {
+      builder: (BuildContext ctx) {
         return AlertDialog(
           backgroundColor: kBackgroundColor1,
           title: functionText(
@@ -23,24 +25,25 @@ Future openDialog(BuildContext context) async {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: kRoseColor))),
           ),
-          actions: [
+          actions: <Widget>[
             TextButton(
               onPressed: () async {
-                Navigator.of(ctx).pop();
+                Get.back();
               },
               child:
                   const Text('Cancel', style: TextStyle(color: Colors.white)),
             ),
             TextButton(
               onPressed: () {
-                if (playlistTextController.text == "") {
+                if (playlistTextController.text == '') {
                   return;
                 } else {
-                  playlistCreation(playlistTextController.text);
+                  playlistController
+                      .playlistCreation(playlistTextController.text);
 
-                  keyUpdate();
+                  playlistController.keyUpdate();
                   playlistTextController.clear();
-                  Navigator.of(ctx).pop();
+                  Get.back();
                 }
               },
               child: const Text(
@@ -53,18 +56,19 @@ Future openDialog(BuildContext context) async {
       });
 }
 
-Future updatePlaylistName(BuildContext context, String playlistName) async {
-  String value1 = "";
+Future<dynamic> updatePlaylistName(
+    BuildContext context, String playlistName) async {
+  String value1 = '';
   showDialog(
       context: context,
-      builder: (ctx) {
+      builder: (BuildContext ctx) {
         return AlertDialog(
           backgroundColor: kBackgroundColor1,
           title: functionText(
               'Update Playlist Name', Colors.white, FontWeight.normal, 20),
           content: TextFormField(
             initialValue: playlistName,
-            onChanged: (value) {
+            onChanged: (String value) {
               value1 = value;
             },
             style: const TextStyle(color: Colors.white),
@@ -74,22 +78,23 @@ Future updatePlaylistName(BuildContext context, String playlistName) async {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: kRoseColor))),
           ),
-          actions: [
+          actions: <Widget>[
             TextButton(
               onPressed: () async {
-                Navigator.of(ctx).pop();
+                Get.back();
               },
               child:
                   const Text('Cancel', style: TextStyle(color: Colors.white)),
             ),
             TextButton(
               onPressed: () async {
-                Navigator.pop(ctx);
-                Navigator.pop(context);
-                if (value1 == "") {
+                Get.back();
+                Get.back();
+                if (value1 == '') {
                   return;
                 }
-                await playlistNameUpdate(playlistName, value1);
+                await playlistController.playlistNameUpdate(
+                    playlistName, value1);
               },
               child: const Text(
                 'Update',

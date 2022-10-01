@@ -1,15 +1,8 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import '../controller/splash_screen/screen_splash.dart';
 import '../core/colors.dart';
-import '../view/play_screen/screen_play.dart';
-import '../view/splash_screen/screen_splash.dart';
 
-ValueNotifier<bool> notification = ValueNotifier(true);
-const String appName = "Musik";
-
-double screenHeight = 0;
-double screenWidth = 0;
-ValueNotifier<bool> miniPlayerVisibility = ValueNotifier(false);
 bool songSkip = true;
 
 //---------------------------functions for common usage
@@ -42,7 +35,7 @@ Widget functionTextButton(Function() textFunction, String text) {
     style: ButtonStyle(
         alignment: Alignment.centerLeft,
         padding: MaterialStateProperty.all<EdgeInsets>(
-          const EdgeInsets.all(0),
+          EdgeInsets.zero,
         )),
     onPressed: textFunction,
     child: functionText(
@@ -54,75 +47,11 @@ Widget functionTextButton(Function() textFunction, String text) {
   );
 }
 
-Widget miniPlayer(BuildContext context) {
-  return Visibility(
-    visible: miniPlayerVisibility.value,
-    child: audioPlayer.builderRealtimePlayingInfos(
-        builder: (context, realtimePlayingInfos) {
-      return Card(
-        color: kAppbarColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25.0),
-        ),
-        child: ListTile(
-          tileColor: Colors.transparent,
-          onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: ((context) => const ScreenPlay()))),
-          leading: const CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.transparent,
-            backgroundImage: AssetImage('assets/images/musicIcon1.png'),
-          ),
-          title: Text(
-            realtimePlayingInfos.current!.audio.audio.metas.title.toString(),
-            maxLines: 1,
-            style: const TextStyle(color: Colors.white),
-          ),
-          subtitle: Text(
-            realtimePlayingInfos.current!.audio.audio.metas.title.toString(),
-            maxLines: 1,
-            style: const TextStyle(color: Colors.white),
-          ),
-          trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-            IconButton(
-              onPressed: () async {
-                if (songSkip) {
-                  songSkip = false;
-                  await audioPlayer.previous();
-                  songSkip = true;
-                }
-              },
-              icon: functionIcon(Icons.skip_previous, 40, Colors.white),
-            ),
-            IconButton(
-                onPressed: () {
-                  audioPlayer.playOrPause();
-                },
-                icon: realtimePlayingInfos.isPlaying
-                    ? functionIcon(Icons.pause, 40, Colors.white)
-                    : functionIcon(Icons.play_arrow_rounded, 40, Colors.white)),
-            IconButton(
-              onPressed: () async {
-                if (songSkip) {
-                  songSkip = false;
-                  await audioPlayer.next();
-                  songSkip = true;
-                }
-              },
-              icon: functionIcon(Icons.skip_next, 40, Colors.white),
-            ),
-          ]),
-        ),
-      );
-    }),
-  );
-}
-
 //------------------------------playscreen slider
 
 Widget slider(RealtimePlayingInfos realtimePlayingInfos) {
   return Stack(
-    children: [
+    children: <Widget>[
       SliderTheme(
         data: const SliderThemeData(
             thumbColor: Colors.white,
@@ -135,16 +64,15 @@ Widget slider(RealtimePlayingInfos realtimePlayingInfos) {
           max: realtimePlayingInfos.duration.inSeconds <= 0
               ? 10000
               : realtimePlayingInfos.duration.inSeconds.toDouble() + 3,
-          min: 0,
-          onChanged: ((value) {
+          onChanged: (double value) {
             if (value <= 0) {
-              audioPlayer.seek(const Duration(seconds: 0));
+              audioPlayer.seek(Duration.zero);
             } else if (value >= realtimePlayingInfos.duration.inSeconds) {
               audioPlayer.seek(realtimePlayingInfos.duration);
             } else {
               audioPlayer.seek(Duration(seconds: value.toInt()));
             }
-          }),
+          },
         ),
       ),
     ],
@@ -156,13 +84,10 @@ Widget timeStamps(RealtimePlayingInfos realtimePlayingInfos) {
     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
+      children: <Widget>[
         Text(
           transformString(realtimePlayingInfos.currentPosition.inSeconds),
           style: const TextStyle(color: Colors.grey),
-        ),
-        SizedBox(
-          width: screenWidth * 0.7,
         ),
         Text(
           transformString(realtimePlayingInfos.duration.inSeconds),
@@ -174,15 +99,15 @@ Widget timeStamps(RealtimePlayingInfos realtimePlayingInfos) {
 }
 
 String transformString(int seconds) {
-  String minuteString =
+  final String minuteString =
       '${(seconds / 60).floor() < 10 ? 0 : ''}${(seconds / 60).floor()}';
-  String secondString = '${seconds % 60 < 10 ? 0 : ''}${seconds % 60}';
+  final String secondString = '${seconds % 60 < 10 ? 0 : ''}${seconds % 60}';
   return '$minuteString:$secondString';
 }
 //------------------------------playscreen slider end
 
 void snackBar(String content, Color color, BuildContext context) {
-  final snackBar = SnackBar(
+  final SnackBar snackBar = SnackBar(
     content: Text(content),
     duration: const Duration(seconds: 1),
     backgroundColor: color,

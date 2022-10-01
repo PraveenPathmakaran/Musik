@@ -1,68 +1,40 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import '../../controller/home_screen/home_screen_controller.dart';
 import '../../core/colors.dart';
-import '../../functions/design_widgets.dart';
 import '../favourite_screen/screen_addtofavourite.dart';
 import '../favourite_screen/screen_favourite.dart';
+import '../mini_player/mini_player.dart';
 import '../playlist_screen/playlist_widgets.dart';
 import '../playlist_screen/screen_playlist.dart';
 import '../screen_search/screen_search.dart';
+import '../widgets.dart';
 import 'home_widgets.dart';
+import 'screen_drawer.dart';
 
-late TabController tabController;
-bool floatingBtnVisibility = true;
+class ScreenHomeMain extends StatelessWidget {
+  ScreenHomeMain({super.key});
 
-class ScreenHomeMain extends StatefulWidget {
-  const ScreenHomeMain({Key? key}) : super(key: key);
-
-  @override
-  State<ScreenHomeMain> createState() => _ScreenHomeState();
-}
-
-class _ScreenHomeState extends State<ScreenHomeMain>
-    with TickerProviderStateMixin {
   final AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
-
-  @override
-  void initState() {
-    super.initState();
-    tabController = TabController(length: 3, vsync: this, initialIndex: 0);
-    tabController.addListener(_handleSelected);
-  }
-
-//floating action button icon change
-  void _handleSelected() {
-    setState(() {
-      tabController.index;
-    });
-  }
-
-  @override
-  void dispose() {
-    tabController.dispose();
-    audioPlayer.dispose();
-    super.dispose();
-  }
+  final HomeScreenController _homeScreenController =
+      Get.put(HomeScreenController());
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      tabController.index == 0
-          ? floatingBtnVisibility = false
-          : floatingBtnVisibility = true;
-    });
-    return ValueListenableBuilder(
-      valueListenable: miniPlayerVisibility,
-      builder: (BuildContext context, bool value, Widget? child) {
-        return WillPopScope(
-          onWillPop: () => _onBackButtonPressed(context),
-          child: Scaffold(
-              floatingActionButton: Visibility(
-                visible: floatingBtnVisibility,
+    return WillPopScope(
+      onWillPop: () => _onBackButtonPressed(context),
+      child: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+            floatingActionButton: Obx(() {
+              return Visibility(
+                visible: _homeScreenController.floatingBtnVisibility.value,
                 child: FloatingActionButton(
                     backgroundColor: kAppbarColor,
-                    onPressed: (() {
-                      if (tabController.index == 1) {
+                    onPressed: () {
+                      if (_homeScreenController.tabIndex == 1) {
                         showModalBottomSheet(
                             backgroundColor: Colors.black,
                             context: context,
@@ -71,101 +43,107 @@ class _ScreenHomeState extends State<ScreenHomeMain>
                                 top: Radius.circular(30),
                               ),
                             ),
-                            builder: (context) {
-                              return ScreenAddToFavourits();
+                            builder: (BuildContext context) {
+                              return const ScreenAddToFavourits();
                             });
-                      } else if (tabController.index == 2) {
-                        openDialog(context);
-                      } else {}
-                    }),
+                      } else if (_homeScreenController.tabIndex == 2) {
+                        playlistCreateDialogue(context);
+                      }
+                    },
                     child: functionIcon(Icons.add, 20, Colors.white)),
+              );
+            }),
+            backgroundColor: Colors.black,
+            extendBodyBehindAppBar: true,
+            drawer: Drawer(
+              width: 250,
+              backgroundColor: kAppbarColor,
+              child: DrawerContent(),
+            ),
+            appBar: AppBar(
+              title: const Text('Music Player'),
+              centerTitle: true,
+              backgroundColor: kAppbarColor,
+              bottom: TabBar(
+                onTap: (int value) {
+                  value == 0
+                      ? _homeScreenController.floatingBtnVisibility.value =
+                          false
+                      : _homeScreenController.floatingBtnVisibility.value =
+                          true;
+                  _homeScreenController.tabIndex = value;
+                },
+                tabs: <Widget>[
+                  Tab(
+                    text: 'Home',
+                    icon: functionIcon(Icons.home, 25, kWhiteColor),
+                  ),
+                  Tab(
+                    text: 'Favourites',
+                    icon: functionIcon(Icons.favorite, 25, kWhiteColor),
+                  ),
+                  Tab(
+                    text: 'Playlist',
+                    icon: functionIcon(Icons.playlist_play, 25, kWhiteColor),
+                  ),
+                ],
               ),
-              backgroundColor: Colors.black,
-              extendBodyBehindAppBar: true,
-              drawer: const Drawer(
-                width: 250,
-                backgroundColor: kAppbarColor,
-                child: DrawerContent(),
-              ),
-              appBar: AppBar(
-                title: const Text('Music Player'),
-                centerTitle: true,
-                backgroundColor: kAppbarColor,
-                bottom: TabBar(
-                  onTap: (value) {},
-                  controller: tabController,
-                  tabs: [
-                    Tab(
-                      text: 'Home',
-                      icon: functionIcon(Icons.home, 25, kWhiteColor),
-                    ),
-                    Tab(
-                      text: 'Favourites',
-                      icon: functionIcon(Icons.favorite, 25, kWhiteColor),
-                    ),
-                    Tab(
-                      text: 'Playlist',
-                      icon: functionIcon(Icons.playlist_play, 25, kWhiteColor),
-                    ),
-                  ],
-                ),
-                elevation: 0,
-                actions: [
-                  IconButton(
+              elevation: 0,
+              actions: <Widget>[
+                IconButton(
+                    onPressed: () {
+                      showSearch(
+                        context: context,
+                        delegate: MusicSearch(),
+                      );
+                    },
+                    icon: const Icon(Icons.search))
+              ],
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return IconButton(
                       onPressed: () {
-                        showSearch(
-                          context: context,
-                          delegate: MusicSearch(),
-                        );
+                        Scaffold.of(context).openDrawer();
                       },
-                      icon: const Icon(Icons.search))
-                ],
-                leading: Builder(
-                  builder: (BuildContext context) {
-                    return IconButton(
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                        icon: const Icon(Icons.settings));
-                  },
-                ),
+                      icon: const Icon(Icons.settings));
+                },
               ),
-              body: TabBarView(
-                controller: tabController,
-                children: const [
-                  ScreenHome(),
-                  ScreenFavourite(),
-                  ScreenPlaylist(),
-                ],
-              ),
-              bottomNavigationBar: miniPlayer(context)),
-        );
-      },
+            ),
+            body: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
+              children: <Widget>[
+                const ScreenHome(),
+                ScreenFavourite(),
+                ScreenPlaylist(),
+              ],
+            ),
+            bottomNavigationBar: MiniPlayer()),
+      ),
     );
   }
 }
 
 Future<bool> _onBackButtonPressed(BuildContext context) async {
-  bool exitApp = await showDialog(
+  final bool? exitApp = await showDialog(
     context: context,
-    builder: (context) {
+    builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text("Really"),
-        content: const Text("Do you want to close the app?"),
+        title: const Text('Really'),
+        content: const Text('Do you want to close the app?'),
         actions: <Widget>[
           TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false);
+                Get.back();
               },
-              child: const Text("No")),
+              child: const Text('No')),
           TextButton(
               onPressed: () {
-                Navigator.of(context).pop(true);
+                SystemNavigator.pop();
               },
-              child: const Text("Yes"))
+              child: const Text('Yes'))
         ],
       );
     },
   );
-  return exitApp;
+  return exitApp!;
 }

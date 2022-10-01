@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
-import '../../core/colors.dart';
-import '../../functions/audio_functions.dart';
-import '../../functions/design_widgets.dart';
-import '../favourite_screen/screen_favourite.dart';
-import '../home_screen/home_widgets.dart';
-import '../play_screen/screen_play.dart';
-import '../playlist_screen/screen_playlist_songs.dart';
-import '../splash_screen/screen_splash.dart';
+import 'package:get/get.dart';
 
-class MusicSearch extends SearchDelegate {
+import '../../controller/audio_functions.dart';
+import '../../controller/home_screen/home_screen_controller.dart';
+import '../../controller/playlist_Screen/screen_playlist_controller.dart';
+import '../../controller/splash_screen/screen_splash.dart';
+import '../../core/colors.dart';
+import '../../model/music_model.dart';
+import '../favourite_screen/screen_favourite.dart';
+import '../home_screen/screen_home_bottomsheet.dart';
+import '../play_screen/screen_play.dart';
+import '../widgets.dart';
+
+class MusicSearch extends SearchDelegate<dynamic> {
+  final HomeScreenController _homeScreenController =
+      Get.put(HomeScreenController());
+  final PlaylistController _playlistController = Get.put(PlaylistController());
+
   @override
   List<Widget>? buildActions(BuildContext context) {
-    return [
+    return <Widget>[
       IconButton(
           onPressed: () {
-            query = "";
+            query = '';
           },
           icon: const Icon(Icons.clear))
     ];
@@ -31,8 +39,8 @@ class MusicSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    final suggetionList = allAudioListFromDB
-        .where((element) =>
+    final List<MusicModel> suggetionList = allAudioListFromDB
+        .where((MusicModel element) =>
             element.title!.toLowerCase().contains(query.toLowerCase()))
         .toList();
     return Container(
@@ -73,31 +81,23 @@ class MusicSearch extends SearchDelegate {
                           top: Radius.circular(30),
                         ),
                       ),
-                      builder: (ctx) {
+                      builder: (BuildContext ctx) {
                         return HomeBottomSheet(
                           id: suggetionList[index].id.toString(),
                         );
                       });
                   favouritesAudioListUpdate = false;
-                  playlistAudioListUpdate = false;
+                  _playlistController.playlistAudioListUpdate = false;
                 },
               ),
               onTap: () async {
                 await createAudiosFileList(suggetionList);
                 audioPlayer.playlistPlayAtIndex(index);
-                miniPlayerVisibility.value = true;
+                _homeScreenController.miniPlayerVisibility.value = true;
                 favouritesAudioListUpdate = false;
-                playlistAudioListUpdate = false;
+                _playlistController.playlistAudioListUpdate = false;
 
-                // ignore: use_build_context_synchronously
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const ScreenPlay();
-                    },
-                  ),
-                );
+                await Get.to(const ScreenPlay());
               },
             ),
           );
@@ -108,8 +108,8 @@ class MusicSearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggetionList = allAudioListFromDB
-        .where((element) =>
+    final List<MusicModel> suggetionList = allAudioListFromDB
+        .where((MusicModel element) =>
             element.title!.toLowerCase().contains(query.toLowerCase()))
         .toList();
     return suggetionList.isEmpty
@@ -161,7 +161,7 @@ class MusicSearch extends SearchDelegate {
                                 top: Radius.circular(30),
                               ),
                             ),
-                            builder: (ctx) {
+                            builder: (BuildContext ctx) {
                               return HomeBottomSheet(
                                 id: suggetionList[index].id.toString(),
                               );
@@ -171,19 +171,11 @@ class MusicSearch extends SearchDelegate {
                     onTap: () async {
                       await createAudiosFileList(suggetionList);
                       audioPlayer.playlistPlayAtIndex(index);
-                      miniPlayerVisibility.value = true;
+                      _homeScreenController.miniPlayerVisibility.value = true;
                       favouritesAudioListUpdate = false;
-                      playlistAudioListUpdate = false;
+                      _playlistController.playlistAudioListUpdate = false;
 
-                      // ignore: use_build_context_synchronously
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const ScreenPlay();
-                          },
-                        ),
-                      );
+                      await Get.to(const ScreenPlay());
                     },
                   ),
                 );
@@ -197,6 +189,8 @@ class MusicSearch extends SearchDelegate {
     return ThemeData(
       appBarTheme: const AppBarTheme(backgroundColor: kAppbarColor),
       textTheme: const TextTheme(headline6: TextStyle(color: Colors.white)),
+      textSelectionTheme:
+          const TextSelectionThemeData(cursorColor: Colors.white),
       hintColor: Colors.white,
       inputDecorationTheme: const InputDecorationTheme(
         labelStyle: TextStyle(color: Colors.white),
