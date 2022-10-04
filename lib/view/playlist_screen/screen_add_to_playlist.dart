@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,6 +40,7 @@ class SreenAddToPlaylist extends StatelessWidget {
           ListView.builder(
             controller: ScrollController(),
             itemBuilder: (BuildContext context, int index) {
+              log('1');
               return Card(
                 color: kColorListTile,
                 shape: RoundedRectangleBorder(

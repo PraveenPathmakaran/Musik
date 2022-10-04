@@ -10,15 +10,9 @@ import '../play_screen/screen_play.dart';
 import '../widgets.dart';
 import 'screen_home_bottomsheet.dart';
 
-class ScreenHome extends StatefulWidget {
-  const ScreenHome({super.key});
+class ScreenHome extends StatelessWidget {
+  ScreenHome({super.key});
 
-  @override
-  State<ScreenHome> createState() => _ScreenHomeState();
-}
-
-class _ScreenHomeState extends State<ScreenHome>
-    with AutomaticKeepAliveClientMixin {
   final HomeScreenController _homeScreenController =
       Get.put(HomeScreenController());
 
@@ -26,7 +20,6 @@ class _ScreenHomeState extends State<ScreenHome>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return allAudioListFromDB.isEmpty
         ? Container(
             color: Colors.black,
@@ -38,80 +31,68 @@ class _ScreenHomeState extends State<ScreenHome>
         : Container(
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
             color: Colors.black,
-            child: SingleChildScrollView(
-              child: Column(children: <Widget>[
-                ListView.builder(
-                  controller: ScrollController(),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      margin: const EdgeInsets.all(3),
-                      color: const Color(0xFF14202E),
-                      child: ListTile(
-                          onTap: () async {
-                            await createAudiosFileList(allAudioListFromDB);
-                            await audioPlayer.playlistPlayAtIndex(index);
-                            await Get.to(const ScreenPlay());
+            child: ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  margin: const EdgeInsets.all(3),
+                  color: const Color(0xFF14202E),
+                  child: ListTile(
+                      onTap: () async {
+                        await createAudiosFileList(allAudioListFromDB);
+                        await audioPlayer.playlistPlayAtIndex(index);
+                        await Get.to(const ScreenPlay());
 
-                            _homeScreenController.miniPlayerVisibility.value =
-                                true;
-                            favouritesAudioListUpdate = false;
-                            _playlistController.playlistAudioListUpdate = false;
-                          },
-                          leading: const CircleAvatar(
-                            radius: 28,
-                            backgroundColor: Colors.transparent,
-                            backgroundImage:
-                                AssetImage('assets/images/musicIcon1.png'),
-                          ),
-                          title: Text(
-                            allAudioListFromDB[index].title.toString(),
-                            maxLines: 1,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 15),
-                          ),
-                          subtitle: Text(
-                            allAudioListFromDB[index].artist.toString(),
-                            maxLines: 1,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 10),
-                          ),
-                          trailing: IconButton(
-                            icon:
-                                functionIcon(Icons.more_vert, 20, Colors.white),
-                            onPressed: () {
-                              showModalBottomSheet(
-                                  backgroundColor: kAppbarColor,
-                                  context: context,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(30),
-                                    ),
+                        _homeScreenController.miniPlayerVisibility.value = true;
+                        favouritesAudioListUpdate = false;
+                        _playlistController.playlistAudioListUpdate = false;
+                      },
+                      leading: const CircleAvatar(
+                        radius: 28,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage:
+                            AssetImage('assets/images/musicIcon1.png'),
+                      ),
+                      title: Text(
+                        allAudioListFromDB[index].title.toString(),
+                        maxLines: 1,
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 15),
+                      ),
+                      subtitle: Text(
+                        allAudioListFromDB[index].artist.toString(),
+                        maxLines: 1,
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 10),
+                      ),
+                      trailing: IconButton(
+                        icon: functionIcon(Icons.more_vert, 20, Colors.white),
+                        onPressed: () {
+                          showModalBottomSheet(
+                              backgroundColor: kAppbarColor,
+                              context: context,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(30),
+                                ),
+                              ),
+                              builder: (BuildContext ctx) {
+                                return SizedBox(
+                                  height: 300,
+                                  child: HomeBottomSheet(
+                                    id: allAudioListFromDB[index].id.toString(),
                                   ),
-                                  builder: (BuildContext ctx) {
-                                    return SizedBox(
-                                      height: 300,
-                                      child: HomeBottomSheet(
-                                        id: allAudioListFromDB[index]
-                                            .id
-                                            .toString(),
-                                      ),
-                                    );
-                                  });
-                            },
-                          )),
-                    );
-                  },
-                  itemCount: allAudioListFromDB.length,
-                  shrinkWrap: true,
-                ),
-              ]),
+                                );
+                              });
+                        },
+                      )),
+                );
+              },
+              itemCount: allAudioListFromDB.length,
+              shrinkWrap: true,
             ),
           );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

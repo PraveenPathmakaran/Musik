@@ -27,97 +27,111 @@ class ScreenHomeMain extends StatelessWidget {
       onWillPop: () => _onBackButtonPressed(context),
       child: DefaultTabController(
         length: 3,
-        child: Scaffold(
-            floatingActionButton: Obx(() {
-              return Visibility(
-                visible: _homeScreenController.floatingBtnVisibility.value,
-                child: FloatingActionButton(
-                    backgroundColor: kAppbarColor,
-                    onPressed: () {
-                      if (_homeScreenController.tabIndex == 1) {
-                        showModalBottomSheet(
-                            backgroundColor: Colors.black,
+        child: Builder(
+          builder: (BuildContext context) {
+            final TabController controller = DefaultTabController.of(context)!;
+            controller.addListener(() {
+              if (!controller.indexIsChanging) {
+                _homeScreenController.tabIndex = controller.index;
+                controller.index == 0
+                    ? _homeScreenController.floatingBtnVisibility.value = false
+                    : _homeScreenController.floatingBtnVisibility.value = true;
+              }
+            });
+
+            return Scaffold(
+                floatingActionButton: Obx(() {
+                  return Visibility(
+                    visible: _homeScreenController.floatingBtnVisibility.value,
+                    child: FloatingActionButton(
+                        backgroundColor: kAppbarColor,
+                        onPressed: () {
+                          if (_homeScreenController.tabIndex == 1) {
+                            showModalBottomSheet(
+                                backgroundColor: Colors.black,
+                                context: context,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(30),
+                                  ),
+                                ),
+                                builder: (BuildContext ctx) {
+                                  return const ScreenAddToFavourits();
+                                });
+                          } else if (_homeScreenController.tabIndex == 2) {
+                            playlistCreateDialogue(context);
+                          }
+                        },
+                        child: functionIcon(Icons.add, 20, Colors.white)),
+                  );
+                }),
+                backgroundColor: Colors.black,
+                extendBodyBehindAppBar: true,
+                drawer: Drawer(
+                  width: 250,
+                  backgroundColor: kAppbarColor,
+                  child: DrawerContent(),
+                ),
+                appBar: AppBar(
+                  title: const Text('Music Player'),
+                  centerTitle: true,
+                  backgroundColor: kAppbarColor,
+                  bottom: TabBar(
+                    onTap: (int value) {
+                      value == 0
+                          ? _homeScreenController.floatingBtnVisibility.value =
+                              false
+                          : _homeScreenController.floatingBtnVisibility.value =
+                              true;
+                      _homeScreenController.tabIndex = value;
+                    },
+                    tabs: <Widget>[
+                      Tab(
+                        text: 'Home',
+                        icon: functionIcon(Icons.home, 25, kWhiteColor),
+                      ),
+                      Tab(
+                        text: 'Favourites',
+                        icon: functionIcon(Icons.favorite, 25, kWhiteColor),
+                      ),
+                      Tab(
+                        text: 'Playlist',
+                        icon:
+                            functionIcon(Icons.playlist_play, 25, kWhiteColor),
+                      ),
+                    ],
+                  ),
+                  elevation: 0,
+                  actions: <Widget>[
+                    IconButton(
+                        onPressed: () {
+                          showSearch(
                             context: context,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(30),
-                              ),
-                            ),
-                            builder: (BuildContext context) {
-                              return const ScreenAddToFavourits();
-                            });
-                      } else if (_homeScreenController.tabIndex == 2) {
-                        playlistCreateDialogue(context);
-                      }
+                            delegate: MusicSearch(),
+                          );
+                        },
+                        icon: const Icon(Icons.search))
+                  ],
+                  leading: Builder(
+                    builder: (BuildContext context) {
+                      return IconButton(
+                          onPressed: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                          icon: const Icon(Icons.settings));
                     },
-                    child: functionIcon(Icons.add, 20, Colors.white)),
-              );
-            }),
-            backgroundColor: Colors.black,
-            extendBodyBehindAppBar: true,
-            drawer: Drawer(
-              width: 250,
-              backgroundColor: kAppbarColor,
-              child: DrawerContent(),
-            ),
-            appBar: AppBar(
-              title: const Text('Music Player'),
-              centerTitle: true,
-              backgroundColor: kAppbarColor,
-              bottom: TabBar(
-                onTap: (int value) {
-                  value == 0
-                      ? _homeScreenController.floatingBtnVisibility.value =
-                          false
-                      : _homeScreenController.floatingBtnVisibility.value =
-                          true;
-                  _homeScreenController.tabIndex = value;
-                },
-                tabs: <Widget>[
-                  Tab(
-                    text: 'Home',
-                    icon: functionIcon(Icons.home, 25, kWhiteColor),
                   ),
-                  Tab(
-                    text: 'Favourites',
-                    icon: functionIcon(Icons.favorite, 25, kWhiteColor),
-                  ),
-                  Tab(
-                    text: 'Playlist',
-                    icon: functionIcon(Icons.playlist_play, 25, kWhiteColor),
-                  ),
-                ],
-              ),
-              elevation: 0,
-              actions: <Widget>[
-                IconButton(
-                    onPressed: () {
-                      showSearch(
-                        context: context,
-                        delegate: MusicSearch(),
-                      );
-                    },
-                    icon: const Icon(Icons.search))
-              ],
-              leading: Builder(
-                builder: (BuildContext context) {
-                  return IconButton(
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                      icon: const Icon(Icons.settings));
-                },
-              ),
-            ),
-            body: TabBarView(
-              physics: const NeverScrollableScrollPhysics(),
-              children: <Widget>[
-                const ScreenHome(),
-                ScreenFavourite(),
-                ScreenPlaylist(),
-              ],
-            ),
-            bottomNavigationBar: MiniPlayer()),
+                ),
+                body: TabBarView(
+                  children: <Widget>[
+                    ScreenHome(),
+                    ScreenFavourite(),
+                    ScreenPlaylist(),
+                  ],
+                ),
+                bottomNavigationBar: MiniPlayer());
+          },
+        ),
       ),
     );
   }

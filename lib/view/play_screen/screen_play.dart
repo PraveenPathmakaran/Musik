@@ -43,22 +43,22 @@ class PlayContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: SizedBox(
-        height: Get.height,
-        width: Get.width,
+    return SizedBox(
+      height: Get.height,
+      width: Get.width,
+      child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             SizedBox(
               height: Get.height * 0.10,
             ),
-            const CircleAvatar(
+            CircleAvatar(
               backgroundColor: Colors.transparent,
-              backgroundImage: AssetImage('assets/images/songsImage.png'),
-              radius: 130,
+              backgroundImage: const AssetImage('assets/images/songsImage.png'),
+              radius: Get.width * 0.30,
             ),
             SizedBox(
-              height: Get.height * 0.10,
+              height: Get.height * 0.05,
             ),
             Container(
                 height: Get.height * 0.03,
