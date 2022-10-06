@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -55,12 +57,22 @@ class PlaylistController extends GetxController {
 
   Future<void> playlistSongDelete(String id, String playlistname) async {
     tempPlaylistId.remove(id);
-    final Audio audio =
-        audioSongsList.firstWhere((Audio element) => element.metas.id == id);
-    audioPlayer.playlist!.remove(audio);
+
     playlistDB.put(playlistname, tempPlaylistId);
     await getPlaylistSongs(playlistname);
     await keyUpdate();
+    try {
+      if (audioPlayer.playlist != null && audioPlayer.isPlaying.value) {
+        final Audio? audio = audioSongsList
+            .firstWhereOrNull((Audio element) => element.metas.id == id);
+
+        if (audio != null && audioPlayer.playlist!.contains(audio)) {
+          audioPlayer.playlist!.remove(audio);
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   Future<void> playlistNameUpdate(

@@ -36,11 +36,28 @@ class HomeBottomSheet extends StatelessWidget {
         ),
         TextButton(
             onPressed: () async {
-              tempFavouriteList.contains(id)
-                  ? favouritesController.favouritesRemove(id)
-                  : favouritesController.addFavouritesToDB(id);
-              if (!value) {}
-              Get.back();
+              if (tempFavouriteList.contains(id)) {
+                Get.defaultDialog(
+                  title: 'Alert',
+                  content: const Text('Do you want to remove?'),
+                  cancel: ElevatedButton(
+                    child: const Text('Cancel'),
+                    onPressed: () => Get.back(),
+                  ),
+                  confirm: ElevatedButton(
+                    child: const Text('Confirm'),
+                    onPressed: () {
+                      favouritesController.favouritesRemove(id);
+
+                      Get.back();
+                      Get.back();
+                    },
+                  ),
+                );
+              } else {
+                favouritesController.addFavouritesToDB(id);
+                Get.back();
+              }
               tempFavouriteList.contains(id)
                   ? snackBar('Added to favourites', kBackgroundColor2, context)
                   : snackBar('Removed Succesfully', kBackgroundColor2, context);

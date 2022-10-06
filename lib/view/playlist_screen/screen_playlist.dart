@@ -80,64 +80,8 @@ class ScreenPlaylist extends StatelessWidget {
                                     ),
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return SizedBox(
-                                        height: 300,
-                                        child: Column(
-                                          children: <Widget>[
-                                            Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8, right: 8),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  functionText('', Colors.white,
-                                                      FontWeight.bold, 18),
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Get.back();
-                                                      },
-                                                      child: functionText(
-                                                          'Close',
-                                                          Colors.white,
-                                                          FontWeight.bold,
-                                                          18))
-                                                ],
-                                              ),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                playlistController
-                                                    .playlistDelete(
-                                                        playlistController
-                                                            .allkey[index]
-                                                            .toString());
-                                                snackBar('Deleted Successfully',
-                                                    kBackgroundColor2, context);
-                                                Get.back();
-                                              },
-                                              child: functionText(
-                                                  'Delete Playlist',
-                                                  Colors.white,
-                                                  FontWeight.bold,
-                                                  20),
-                                            ),
-                                            TextButton(
-                                                onPressed: () async {
-                                                  await updatePlaylistName(
-                                                      context,
-                                                      playlistController
-                                                          .allkey[index]
-                                                          .toString());
-                                                },
-                                                child: functionText(
-                                                    'Edit Playlist',
-                                                    Colors.white,
-                                                    FontWeight.bold,
-                                                    20)),
-                                          ],
-                                        ),
+                                      return PlayListRemove(
+                                        index: index,
                                       );
                                     },
                                   );
@@ -153,5 +97,68 @@ class ScreenPlaylist extends StatelessWidget {
               ),
             );
     });
+  }
+}
+
+class PlayListRemove extends StatelessWidget {
+  const PlayListRemove({super.key, required this.index});
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 300,
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.only(left: 8, right: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                functionText('', Colors.white, FontWeight.bold, 18),
+                TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: functionText(
+                        'Close', Colors.white, FontWeight.bold, 18))
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.defaultDialog(
+                title: 'Alert',
+                content: const Text('Do you want to remove?'),
+                cancel: ElevatedButton(
+                  child: const Text('Cancel'),
+                  onPressed: () => Get.back(),
+                ),
+                confirm: ElevatedButton(
+                  child: const Text('Confirm'),
+                  onPressed: () {
+                    playlistController.playlistDelete(
+                        playlistController.allkey[index].toString());
+                    snackBar(
+                        'Deleted Successfully', kBackgroundColor2, context);
+                    Get.back();
+                    Get.back();
+                  },
+                ),
+              );
+            },
+            child: functionText(
+                'Delete Playlist', Colors.white, FontWeight.bold, 20),
+          ),
+          TextButton(
+              onPressed: () async {
+                await updatePlaylistName(
+                    context, playlistController.allkey[index].toString());
+              },
+              child: functionText(
+                  'Edit Playlist', Colors.white, FontWeight.bold, 20)),
+        ],
+      ),
+    );
   }
 }

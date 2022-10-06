@@ -15,7 +15,7 @@ import '../favorite_screen/screen_favourites_controller.dart';
 final AssetsAudioPlayer audioPlayer = AssetsAudioPlayer.withId('0');
 final RxList<MusicModel> favouritesListFromDb = <MusicModel>[].obs;
 List<Audio> audioSongsList = <Audio>[]; //converted audio list audiomodel
-List<String> tempFavouriteList = <String>[]; //favourite audi songs id list
+List<String> tempFavouriteList = <String>[]; //favourite audio songs id list
 List<MusicModel> allMusicModelSongs =
     <MusicModel>[]; //map converted to music model
 List<MusicModel> allAudioListFromDB = <MusicModel>[];

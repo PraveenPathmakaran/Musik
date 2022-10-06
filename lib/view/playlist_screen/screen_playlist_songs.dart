@@ -141,20 +141,35 @@ class ScreenPlaylistAudios extends StatelessWidget {
                                         ),
                                         TextButton(
                                             onPressed: () {
-                                              playlistController
-                                                  .playlistSongDelete(
-                                                      playlistController
-                                                          .playlistSongsFromDB[
-                                                              index]
-                                                          .id
-                                                          .toString(),
-                                                      playlistname);
+                                              Get.defaultDialog(
+                                                title: 'Alert',
+                                                content: const Text(
+                                                    'Do you want to remove?'),
+                                                cancel: ElevatedButton(
+                                                  child: const Text('Cancel'),
+                                                  onPressed: () => Get.back(),
+                                                ),
+                                                confirm: ElevatedButton(
+                                                  child: const Text('Confirm'),
+                                                  onPressed: () {
+                                                    playlistController
+                                                        .playlistSongDelete(
+                                                            playlistController
+                                                                .playlistSongsFromDB[
+                                                                    index]
+                                                                .id
+                                                                .toString(),
+                                                            playlistname);
 
-                                              snackBar(
-                                                  'Removed From $playlistname',
-                                                  kBackgroundColor2,
-                                                  context);
-                                              Get.back();
+                                                    snackBar(
+                                                        'Removed From $playlistname',
+                                                        kBackgroundColor2,
+                                                        context);
+                                                    Get.back();
+                                                    Get.back();
+                                                  },
+                                                ),
+                                              );
                                             },
                                             child: functionText(
                                                 'Remove From $playlistname',
@@ -163,41 +178,23 @@ class ScreenPlaylistAudios extends StatelessWidget {
                                                 20)),
                                         TextButton(
                                             onPressed: () {
-                                              tempFavouriteList.contains(
-                                                      playlistController
-                                                          .playlistSongsFromDB[
-                                                              index]
-                                                          .id
-                                                          .toString())
-                                                  ? favouritesController
-                                                      .favouritesRemove(
-                                                          playlistController
-                                                              .playlistSongsFromDB[
-                                                                  index]
-                                                              .id
-                                                              .toString())
-                                                  : favouritesController
-                                                      .addFavouritesToDB(
-                                                          playlistController
-                                                              .playlistSongsFromDB[
-                                                                  index]
-                                                              .id
-                                                              .toString());
-                                              Get.back();
-                                              tempFavouriteList.contains(
-                                                      playlistController
-                                                          .playlistSongsFromDB[
-                                                              index]
-                                                          .id
-                                                          .toString())
-                                                  ? snackBar(
-                                                      'Added to favourites',
-                                                      kBackgroundColor2,
-                                                      context)
-                                                  : snackBar(
-                                                      'Removed Succesfully',
-                                                      kBackgroundColor2,
-                                                      context);
+                                              if (!tempFavouriteList.contains(
+                                                  playlistController
+                                                      .playlistSongsFromDB[
+                                                          index]
+                                                      .id
+                                                      .toString())) {
+                                                favouritesController
+                                                    .addFavouritesToDB(
+                                                        playlistController
+                                                            .playlistSongsFromDB[
+                                                                index]
+                                                            .id
+                                                            .toString());
+                                                Get.back();
+                                                snackBar('Added to favourites',
+                                                    kBackgroundColor2, context);
+                                              }
                                             },
                                             child: tempFavouriteList.contains(
                                                     playlistController
@@ -205,11 +202,8 @@ class ScreenPlaylistAudios extends StatelessWidget {
                                                             index]
                                                         .id
                                                         .toString())
-                                                ? functionText(
-                                                    'Remove From Favourites',
-                                                    Colors.white,
-                                                    FontWeight.bold,
-                                                    20)
+                                                ? functionText('', Colors.white,
+                                                    FontWeight.bold, 20)
                                                 : functionText(
                                                     'Add to Favourites',
                                                     Colors.white,

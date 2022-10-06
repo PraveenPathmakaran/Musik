@@ -9,8 +9,6 @@ import '../widgets.dart';
 class ScreenSplash extends StatelessWidget {
   ScreenSplash({super.key});
 
-  final FavouritesController favouritesController =
-      Get.put(FavouritesController());
   final ScreenSplashController _screenSplashController =
       Get.put(ScreenSplashController());
   @override

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:get/get.dart';
 import '../../main.dart';
@@ -34,11 +36,21 @@ class FavouritesController extends GetxController {
 
   Future<void> favouritesRemove(String id) async {
     tempFavouriteList.remove(id);
-    final Audio audio =
-        audioSongsList.firstWhere((Audio element) => element.metas.id == id);
-    audioPlayer.playlist!.remove(audio);
     await favouriteDB.put('favourite', tempFavouriteList);
     await getFavouritesAudios(tempFavouriteList);
     await getAllFavouritesFromDB();
+
+    try {
+      if (audioPlayer.playlist != null && audioPlayer.isPlaying.value) {
+        final Audio? audio = audioSongsList
+            .firstWhereOrNull((Audio element) => element.metas.id == id);
+
+        if (audio != null && audioPlayer.playlist!.contains(audio)) {
+          audioPlayer.playlist!.remove(audio);
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }

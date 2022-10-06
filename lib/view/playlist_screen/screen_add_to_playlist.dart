@@ -17,78 +17,76 @@ class SreenAddToPlaylist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        child: Column(children: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(left: 8, right: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                functionText('Add Songs to $playlistname', Colors.white,
-                    FontWeight.bold, 17),
-                TextButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    child: functionText(
-                        'Close', Colors.white, FontWeight.bold, 17))
-              ],
-            ),
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: ListView(shrinkWrap: true, children: <Widget>[
+        Container(
+          padding: const EdgeInsets.only(left: 8, right: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              functionText('Add Songs to $playlistname', Colors.white,
+                  FontWeight.bold, 17),
+              TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child:
+                      functionText('Close', Colors.white, FontWeight.bold, 17))
+            ],
           ),
-          ListView.builder(
-            controller: ScrollController(),
-            itemBuilder: (BuildContext context, int index) {
-              log('1');
-              return Card(
-                color: kColorListTile,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
+        ),
+        ListView.builder(
+          controller: ScrollController(),
+          itemBuilder: (BuildContext context, int index) {
+            log('1');
+            return Card(
+              color: kColorListTile,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: ListTile(
+                leading: const CircleAvatar(
+                  radius: 35,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: AssetImage('assets/images/musicIcon1.png'),
                 ),
-                child: ListTile(
-                  leading: const CircleAvatar(
-                    radius: 35,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: AssetImage('assets/images/musicIcon1.png'),
-                  ),
-                  title: Text(
-                    allAudioListFromDB[index].title.toString(),
-                    maxLines: 1,
-                    style: const TextStyle(color: Colors.white, fontSize: 15),
-                  ),
-                  subtitle: Text(
-                    allAudioListFromDB[index].artist.toString(),
-                    maxLines: 1,
-                    style: const TextStyle(color: Colors.white, fontSize: 10),
-                  ),
-                  trailing: IconButton(
-                    icon: Obx(() {
-                      return playlistController.playlistSongsFromDB
-                              .contains(allAudioListFromDB[index])
-                          ? functionIcon(Icons.remove, 20, Colors.white)
-                          : functionIcon(Icons.add, 20, Colors.white);
-                    }),
-                    onPressed: () async {
-                      playlistController.tempPlaylistId
-                              .contains(allAudioListFromDB[index].id.toString())
-                          ? await playlistController.playlistSongDelete(
-                              allAudioListFromDB[index].id.toString(),
-                              playlistname)
-                          : await playlistController.addtoPlaylistSongs(
-                              allAudioListFromDB[index].id.toString(),
-                              playlistname);
-                      await playlistController.keyUpdate();
-                    },
-                  ),
+                title: Text(
+                  allAudioListFromDB[index].title.toString(),
+                  maxLines: 1,
+                  style: const TextStyle(color: Colors.white, fontSize: 15),
                 ),
-              );
-            },
-            itemCount: allAudioListFromDB.length,
-            shrinkWrap: true,
-          )
-        ]),
-      ),
+                subtitle: Text(
+                  allAudioListFromDB[index].artist.toString(),
+                  maxLines: 1,
+                  style: const TextStyle(color: Colors.white, fontSize: 10),
+                ),
+                trailing: IconButton(
+                  icon: Obx(() {
+                    return playlistController.playlistSongsFromDB
+                            .contains(allAudioListFromDB[index])
+                        ? functionIcon(Icons.remove, 20, Colors.white)
+                        : functionIcon(Icons.add, 20, Colors.white);
+                  }),
+                  onPressed: () async {
+                    playlistController.tempPlaylistId
+                            .contains(allAudioListFromDB[index].id.toString())
+                        ? await playlistController.playlistSongDelete(
+                            allAudioListFromDB[index].id.toString(),
+                            playlistname)
+                        : await playlistController.addtoPlaylistSongs(
+                            allAudioListFromDB[index].id.toString(),
+                            playlistname);
+                    await playlistController.keyUpdate();
+                  },
+                ),
+              ),
+            );
+          },
+          itemCount: allAudioListFromDB.length,
+          shrinkWrap: true,
+        )
+      ]),
     );
   }
 }
