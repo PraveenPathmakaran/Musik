@@ -28,7 +28,7 @@ hive_generator
 
 ## Screenshots
 
-![App Screenshot](/assets/images/screenshot.png)
+![App Screenshot](/assets/images/screenshot.png?raw=true "App Screen Shot)
 
 
 ## Installation
