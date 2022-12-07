@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controller/favorite_screen/screen_favourites_controller.dart';
 import '../../controller/splash_screen/screen_splash.dart';
 import '../../core/colors.dart';
 import '../../core/constant.dart';

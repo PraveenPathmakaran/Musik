@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -99,6 +101,7 @@ class ScreenAddToFavourits extends StatelessWidget {
       itemCount: allAudioListFromDB.length,
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
+        log('1');
         return Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),

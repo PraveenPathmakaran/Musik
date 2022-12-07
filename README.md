@@ -1,16 +1,50 @@
-# newmusicplayer
+# MUZIK
 
-A new Flutter project.
+Offline Music Player Using flutter and Kotlin.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+```python
+## Features:-
+List all songs from Local Store
+Method Channel to fetch internal storage(Kotlin)
+Play/Pause
+Next/Previous
+Background play/pause&next/previous
+Search
+Add Song into Playlist and Favorites
+Notification On/Off
+## Technology Used:-
+Flutter
+Dart
+Hive
+Kotlin(Method channel)
+## Packages:-
+Assets Audio Player
+Hive_flutter
+Build_Runner
+hive_generator
+```
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Screenshots
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![App Screenshot](assets/images/screenshot.png?raw=true "App Screen Shot")
+
+
+## Installation
+
+Install from Play Store
+
+
+  Use the Link [MUZIK](https://play.google.com/store/apps/details?id=com.musik.music_player) to install the App.
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+
+[Contact](praveenpathmakaran@gmail.com)

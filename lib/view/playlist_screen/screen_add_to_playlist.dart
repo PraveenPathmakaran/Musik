@@ -18,28 +18,28 @@ class SreenAddToPlaylist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
-      child: ListView(shrinkWrap: true, children: <Widget>[
-        Container(
-          padding: const EdgeInsets.only(left: 8, right: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              functionText('Add Songs to $playlistname', Colors.white,
-                  FontWeight.bold, 17),
-              TextButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  child:
-                      functionText('Close', Colors.white, FontWeight.bold, 17))
-            ],
-          ),
-        ),
-        ListView.builder(
+        padding: const EdgeInsets.all(10),
+        child:
+            // Container(
+            //   padding: const EdgeInsets.only(left: 8, right: 8),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: <Widget>[
+            //       functionText('Add Songs to $playlistname', Colors.white,
+            //           FontWeight.bold, 17),
+            //       TextButton(
+            //           onPressed: () {
+            //             Get.back();
+            //           },
+            //           child:
+            //               functionText('Close', Colors.white, FontWeight.bold, 17))
+            //     ],
+            //   ),
+            // ),
+            ListView.builder(
           controller: ScrollController(),
           itemBuilder: (BuildContext context, int index) {
-            log('1');
+            log('haa');
             return Card(
               color: kColorListTile,
               shape: RoundedRectangleBorder(
@@ -85,9 +85,7 @@ class SreenAddToPlaylist extends StatelessWidget {
           },
           itemCount: allAudioListFromDB.length,
           shrinkWrap: true,
-        )
-      ]),
-    );
+        ));
   }
 }
 
