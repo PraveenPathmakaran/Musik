@@ -28,7 +28,7 @@ hive_generator
 
 ## Screenshots
 
-![App Screenshot](https://github.com/PraveenPathmakaran/Musik/blob/master/assets/images/screenshot.png "App Screen Shot")
+![App Screenshot](https://raw.github.com/PraveenPathmakaran/Musik/master/assets/images/screenshot.png)
 
 
 ## Installation
